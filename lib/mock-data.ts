@@ -11,8 +11,20 @@ export const mockCharacter: Character = {
   requiredXp: getRequiredXP(3),
   gold: 140,
   streakCount: 5,
-  lastActiveDate: new Date().toISOString(),
-  sacrificesThisMonth: 0,
+
+lastActiveDate:
+  new Date().toISOString(),
+
+bestStreak: 5,
+
+streakBroken: false,
+
+sacrificesThisMonth: 0,
+
+sacrificeMonth:
+  `${new Date().getFullYear()}-${String(
+    new Date().getMonth() + 1
+  ).padStart(2, '0')}`,
   attributes: {
     STR: {
       level: 4,
