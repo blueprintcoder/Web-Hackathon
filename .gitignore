@@ -1,34 +1,95 @@
-# dependencies
+# Dependencies
 /node_modules
 /.pnp
 .pnp.js
+.pnpm-store
 
-# testing
+# Testing & Coverage
 /coverage
 
-# next.js
+# Next.js
 /.next/
 /out/
 
-# production
+# Production Builds
 /build
+/dist
 
-# misc
-.DS_Store
-*.pem
+# Vercel
+.vercel
 
-# debug
+# Local Environment Variables
+.env
+.env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+# Explicitly keep .env.example tracked for the team & judges
+!.env.example
+
+# Debug & Package Manager Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# local env files
-.env*.local
-.env
-
-# vercel
-.vercel
-
-# typescript
+# TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Turbo
+.turbo
+
+# Python Cache & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.venv/
+venv/
+ENV/
+
+# Temporary, Scratch & Extracted Files
+tzps_extracted.txt
+*.tmp
+*.temp
+
+# Large Video Recordings & Screen Captures (Keep repo <100MB; host demo video externally)
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+
+# Database Backups & Local SQLite
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDEs and Editors
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*~
