@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Life RPG - Project Master Plan & Strategy</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  @page {
+    size: A4;
+    margin: 16mm 14mm 16mm 14mm;
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #0f172a;
+    background: #ffffff;
+    line-height: 1.5;
+    font-size: 11.5px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .cover-header {
+    background: linear-gradient(135deg, #090d16 0%, #1a103c 50%, #0d1b2a 100%);
+    color: #ffffff;
+    padding: 24px 28px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #334155;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover-header::after {
+    content: "HACKATHON BLUEPRINT";
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+    border: 1px solid #f59e0b;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .title {
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 0 0 6px 0;
+    color: #f8fafc;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: #94a3b8;
+    margin: 0 0 14px 0;
+    max-width: 80%;
+  }
+
+  .meta-grid {
+    display: flex;
+    gap: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding-top: 12px;
+    font-size: 10.5px;
+    color: #cbd5e1;
+  }
+
+  .meta-item strong {
+    color: #38bdf8;
+  }
+
+  h2 {
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: 15px;
+    color: #0f172a;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 5px;
+    margin-top: 22px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-tag {
+    display: inline-block;
+    background: #4f46e5;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  h3 {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 12px 0 6px 0;
+  }
+
+  p {
+    margin: 0 0 8px 0;
+    color: #334155;
+  }
+
+  .alert {
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-size: 11px;
+  }
+
+  .alert-danger {
+    background: #fef2f2;
+    border-left: 4px solid #ef4444;
+    color: #991b1b;
+  }
+
+  .alert-warning {
+    background: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    color: #92400e;
+  }
+
+  .alert-success {
+    background: #f0fdf4;
+    border-left: 4px solid #10b981;
+    color: #065f46;
+  }
+
+  .alert-info {
+    background: #f0f9ff;
+    border-left: 4px solid #0284c7;
+    color: #075985;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 10px 0;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin: 10px 0;
+  }
+
+  .card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 11px 13px;
+  }
+
+  .card-title {
+    font-weight: 700;
+    font-size: 11.5px;
+    color: #0f172a;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-badge {
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: #e0e7ff;
+    color: #3730a3;
+    font-weight: 600;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 10.5px;
+  }
+
+  th, td {
+    border: 1px solid #cbd5e1;
+    padding: 6px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    background: #0f172a;
+    color: #f8fafc;
+    font-weight: 600;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  tr:nth-child(even) {
+    background: #f8fafc;
+  }
+
+  ul, ol {
+    margin: 4px 0 10px 18px;
+    padding: 0;
+    color: #334155;
+  }
+
+  li {
+    margin-bottom: 3px;
+  }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    background: #f1f5f9;
+    color: #d946ef;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 10px;
+  }
+
+  pre {
+    background: #090d16;
+    color: #e2e8f0;
+    padding: 12px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    overflow: hidden;
+    margin: 8px 0;
+    border: 1px solid #1e293b;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  .formula-box {
+    background: #f5f3ff;
+    border: 1px solid #ddd6fe;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 8px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: #5b21b6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .highlight-pill {
+    background: #fef3c7;
+    color: #92400e;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER BLOCK -->
+<div class="cover-header">
+  <div class="title">AETHERIA: THE HUNTER'S PROTOCOL</div>
+  <div class="subtitle">Full-Stack "Life RPG" Hackathon Blueprint, Architecture & Winning Strategy</div>
+  <div class="meta-grid">
+    <div class="meta-item"><strong>Target:</strong> Web Hackathon 2026</div>
+    <div class="meta-item"><strong>Concept:</strong> Habit Gamification RPG</div>
+    <div class="meta-item"><strong>Tech:</strong> Next.js 15 + PostgreSQL + Framer Motion</div>
+    <div class="meta-item"><strong>Status:</strong> Ready for Team Review</div>
+  </div>
+</div>
+
+<div class="alert alert-danger">
+  <strong>CRITICAL JUDGING WARNING:</strong> Submissions relying solely on <code>localStorage</code>, broken live links, runtime crashes, single-commit dumps, or demo videos outside 90-180 seconds (&gt;100MB) receive an <strong>AUTOMATIC ZERO</strong>. Our architecture strictly eliminates all 6 disqualification vectors.
+</div>
+
+<!-- SECTION 1: CORE PROBLEM & THEME -->
+<h2><span class="section-tag">01</span> Core Vision & Thematic Direction</h2>
+<p>
+  Standard productivity apps fail because real habits suffer from <strong>delayed gratification</strong> (hitting the gym or studying takes months to show results). Video games hook players through <strong>instant tactile feedback</strong>, clear progression curves, and tangible rewards.
+</p>
+<p>
+  To avoid looking like a generic Bootstrap SaaS dashboard (which judges penalize heavily), we adopt the <strong>"Solo Leveling / Dark Fantasy Guild"</strong> aesthetic.
+</p>
+
+<div class="grid-3">
+  <div class="card">
+    <div class="card-title">Theme Vocabulary <span class="card-badge">Immersion</span></div>
+    <ul>
+      <li>Tasks &rarr; <strong>Bounties & Quests</strong></li>
+      <li>Points &rarr; <strong>Gold & Mana Crystals</strong></li>
+      <li>Habits &rarr; <strong>Daily Rites & Streaks</strong></li>
+      <li>Store &rarr; <strong>Guild Black Market</strong></li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Alive & Tactile <span class="card-badge">Sensory</span></div>
+    <ul>
+      <li><strong>Audio SFX:</strong> Blade chime, coin drops, level fanfare (with mute switch).</li>
+      <li><strong>Spring Physics:</strong> Floating <code>+50 XP</code> numbers fly to header.</li>
+      <li><strong>Confetti & Flash:</strong> Celebratory level-up modal.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Zero-Lag Feel <span class="card-badge">Performance</span></div>
+    <ul>
+      <li><strong>Optimistic UI:</strong> Checkmarks update instantly; backend syncs in background.</li>
+      <li><strong>Skeletons:</strong> Smooth loading states.</li>
+      <li><strong>Keyboard:</strong> <code>Ctrl+K</code> command palette.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- SECTION 2: ARCHITECTURE & TECH STACK -->
+<h2><span class="section-tag">02</span> Technical Architecture & Technology Stack</h2>
+<table>
+  <thead>
+    <tr>
+      <th style="width: 22%;">Layer</th>
+      <th style="width: 38%;">Technology Choice</th>
+      <th style="width: 40%;">Why It Guarantees Higher Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Frontend Framework</strong></td>
+      <td><strong>Next.js 15 (App Router, React 19, TypeScript)</strong></td>
+      <td>Server-Side Rendering for SEO, unified API routes, zero CORS issues, instant Vercel deployment.</td>
+    </tr>
+    <tr>
+      <td><strong>Styling & UI</strong></td>
+      <td><strong>Tailwind CSS + shadcn/ui + Lucide Icons</strong></td>
+      <td>Dark mode by default, accessible Radix UI primitives with native keyboard navigation.</td>
+    </tr>
+    <tr>
+      <td><strong>State & Animations</strong></td>
+      <td><strong>Framer Motion + Canvas-Confetti</strong></td>
+      <td>Micro-interactions, floating XP text, smooth health/progress bars, celebratory modals.</td>
+    </tr>
+    <tr>
+      <td><strong>Database & ORM</strong></td>
+      <td><strong>PostgreSQL (via Supabase or Neon) + Prisma</strong></td>
+      <td><strong>100% Real Persistence</strong> across hard refreshes and devices. Relational integrity for user data isolation.</td>
+    </tr>
+    <tr>
+      <td><strong>Audio Feedback</strong></td>
+      <td><strong>Web Audio API / Howler.js</strong></td>
+      <td>Zero-latency 8-bit / fantasy sound effects with master volume toggle in header.</td>
+    </tr>
+    <tr>
+      <td><strong>Deployment</strong></td>
+      <td><strong>Vercel (Production) + Supabase Cloud</strong></td>
+      <td>Rock-solid uptime, instant edge builds, public HTTPS URL required for deliverables.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- SECTION 3: PROGRESSION MATH & ATTRIBUTES -->
+<h2><span class="section-tag">03</span> RPG Progression Engine & Game Mathematics</h2>
+<p>The problem statement mandates a <strong>non-linear leveling system</strong> (each subsequent level requires progressively more XP).</p>
+
+<div class="formula-box">
+  <span><strong>Leveling Formula:</strong> Required XP(L) = Math.floor(100 &times; L<sup>1.5</sup>)</span>
+  <span class="highlight-pill">Non-Linear Curve</span>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title">Level Progression Scale</div>
+    <ul>
+      <li><strong>Level 1 &rarr; 2:</strong> 100 XP (Instant early gratification)</li>
+      <li><strong>Level 2 &rarr; 3:</strong> 283 XP</li>
+      <li><strong>Level 3 &rarr; 4:</strong> 520 XP</li>
+      <li><strong>Level 5 &rarr; 6:</strong> 1,118 XP</li>
+      <li><strong>Level 9 &rarr; 10:</strong> 2,700 XP (Prestige achievement)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">5 Core Attributes & Task Categories</div>
+    <ul>
+      <li><strong>Strength (STR):</strong> Workouts, physical fitness, gym, sports.</li>
+      <li><strong>Intellect (INT):</strong> Coding, studying, reading, research.</li>
+      <li><strong>Vitality (VIT):</strong> Hydration, 8h sleep, meditation, meal prep.</li>
+      <li><strong>Agility (AGI):</strong> Quick errands, chores, inbox zero, speedy tasks.</li>
+      <li><strong>Charisma (CHA):</strong> Team meetings, social events, public speaking.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- SECTION 4: KILLER FEATURES (THE HACKATHON WINNERS) -->
+<h2><span class="section-tag">04</span> Hackathon-Winning "Killer Features"</h2>
+<p>These features elevate our project beyond standard CRUD submissions into the 1st-place bracket:</p>
+
+<div class="grid-2">
+  <div class="card" style="border-left: 4px solid #ef4444;">
+    <div class="card-title">1. Weekly Boss Raid: "The Procrastination Demon"</div>
+    <p>A weekly boss with 3,000 HP (e.g. <em>Malakor the Sloth</em>). Completing any quest deals damage to the boss equal to the quest's XP output plus character Strength bonus. Defeating the boss unlocks rare loot chests and guild badges.</p>
+  </div>
+  <div class="card" style="border-left: 4px solid #f59e0b;">
+    <div class="card-title">2. Black Market & Real-World Custom Rewards</div>
+    <p>Users spend earned Gold in two ways:
+    <br>&bull; <strong>Virtual Relics:</strong> <em>Scroll of Focus</em> (+10% INT XP), <em>Aegis Shield</em> (Freezes streak if 1 day missed).
+    <br>&bull; <strong>Real-World Rewards:</strong> Users create custom rewards (e.g., "1 hr Netflix" = 120 Gold, "Order Pizza" = 400 Gold).</p>
+  </div>
+  <div class="card" style="border-left: 4px solid #8b5cf6;">
+    <div class="card-title">3. Hunter Rank Difficulty Tiers</div>
+    <p>Quests are categorized by rank:
+    <br>&bull; <strong>E-Rank:</strong> Quick (10 XP, 5 Gold)
+    <br>&bull; <strong>C-Rank:</strong> Moderate (35 XP, 15 Gold)
+    <br>&bull; <strong>A/S-Rank:</strong> Boss Milestones (150+ XP, 80 Gold). Higher stakes motivate bigger efforts.</p>
+  </div>
+  <div class="card" style="border-left: 4px solid #06b6d4;">
+    <div class="card-title">4. Keyboard Command Palette (Accessibility)</div>
+    <p>Full accessibility via <code>Cmd/Ctrl+K</code>:
+    <br>&bull; Press <code>C</code> &rarr; Quick New Quest modal
+    <br>&bull; Press <code>1/2/3</code> &rarr; Switch tabs (Quests, Boss, Shop)
+    <br>&bull; <code>Space</code> on highlighted quest checks it off with sound!</p>
+  </div>
+</div>
+
+<!-- SECTION 5: DATABASE SCHEMA -->
+<h2><span class="section-tag">05</span> Database Schema & Data Integrity</h2>
+<pre>
+Users (id [UUID], email [STRING], password_hash [STRING], created_at [TIMESTAMP])
+  │
+  ├── Character (id, user_id, name, title, level, current_xp, gold, streak_count, last_active_date)
+  ├── Attributes (character_id, str_xp, int_xp, vit_xp, agi_xp, cha_xp)
+  ├── Quests (id, user_id, title, description, category, rank, xp_reward, gold_reward, status, is_daily, due_date)
+  ├── Inventory (id, user_id, item_id, equipped [BOOL], acquired_at)
+  ├── ShopItems (id, name, description, cost, type, stat_boost, icon_slug)
+  └── BossRaid (id, user_id, name, max_hp, current_hp, deadline, reward_gold, defeated [BOOL])
+</pre>
+
+<!-- SECTION 6: DISQUALIFICATION MITIGATION -->
+<h2><span class="section-tag">06</span> Zero-Tolerance Disqualification Compliance</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Disqualification Rule</th>
+      <th>Strict Requirement</th>
+      <th>Our Guaranteed Prevention Strategy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Broken Links</strong></td>
+      <td>Repo private or live deployment 404 at judging</td>
+      <td>Verify public permissions on GitHub; deploy on Vercel with automated deployment check.</td>
+    </tr>
+    <tr>
+      <td><strong>Fake Data Persistence</strong></td>
+      <td>Solely using <code>localStorage</code></td>
+      <td>All CRUD writes directly to cloud PostgreSQL. Data persists across hard refreshes and devices.</td>
+    </tr>
+    <tr>
+      <td><strong>Build / Deploy Failure</strong></td>
+      <td>App crashes on load in production</td>
+      <td>Run complete production build test (<code>npm run build</code>) and health check endpoint.</td>
+    </tr>
+    <tr>
+      <td><strong>Console / Runtime Crashes</strong></td>
+      <td>Unhandled exceptions or white screen</td>
+      <td>Wrap components in React Error Boundaries; validate all API inputs with Zod schemas.</td>
+    </tr>
+    <tr>
+      <td><strong>Invalid Repository</strong></td>
+      <td>&lt; 3 commits, missing backend, or code dump</td>
+      <td>Maintain 15+ clean chronological commits with descriptive messages following conventional commits.</td>
+    </tr>
+    <tr>
+      <td><strong>Missing / Restricted Video</strong></td>
+      <td>Missing, private/login required, or &gt;100MB</td>
+      <td>Record strictly 120s (under 180s limit), compress to ~25MB MP4, host on YouTube (unlisted) and in repo.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- SECTION 7: DEMO VIDEO SCRIPT -->
+<h2><span class="section-tag">07</span> 120-Second Walkthrough Video Script (Strict Format)</h2>
+<div class="card">
+  <ul>
+    <li><strong>0:00 - 0:20 (Auth):</strong> Show signup/login screen or instant Demo Hunter login. Display character dashboard with current Level and Stats.</li>
+    <li><strong>0:20 - 0:50 (Add & Complete Quest):</strong> Create a new B-Rank Quest ("Implement Auth API"). Check it off: show floating <code>+75 XP</code>, sound chime, and boss taking damage.</li>
+    <li><strong>0:50 - 1:15 (Level Up Celebration):</strong> Complete a second quest to cross the XP threshold. Trigger confetti, sound fanfare, and animated Level Up modal.</li>
+    <li><strong>1:15 - 1:35 (Persistence Proof):</strong> Perform a <strong>hard browser refresh (Ctrl+F5)</strong>. Point out that XP, Level, Gold, and completed status remain intact from PostgreSQL.</li>
+    <li><strong>1:35 - 2:00 (Shop & Boss Raid):</strong> Visit Guild Market, purchase a Relic with earned Gold, show the Boss HP bar, and demonstrate mobile responsive view.</li>
+  </ul>
+</div>
+
+<!-- SECTION 8: TEAM ROLES -->
+<h2><span class="section-tag">08</span> Suggested Team Distribution (Edit as needed)</h2>
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title">Teammate A: Frontend, Theming & UI</div>
+    <ul>
+      <li>Layout, Dark mode palette, Typography, Responsive mobile nav</li>
+      <li>Framer motion spring animations & Level-up confetti modal</li>
+      <li>Sound effect integration and audio toggle</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title">Teammate B: Backend, Database & Game Logic</div>
+    <ul>
+      <li>PostgreSQL schema setup (Prisma / Supabase)</li>
+      <li>Auth session endpoints + Quest CRUD API</li>
+      <li>Server-side XP calculation, Streak logic & Boss damage API</li>
+    </ul>
+  </div>
+</div>
+
+<div class="alert alert-success" style="margin-top: 15px;">
+  <strong>NEXT STEP:</strong> Review this blueprint with your team. To edit text, modify <code>idea.md</code> or <code>idea.docx</code>. Once approved, we will begin scaffolding the Next.js project!
+</div>
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String      @id @default(uuid())
+  email        String      @unique
+  passwordHash String
+  createdAt    DateTime    @default(now())
+  character    Character?
+  quests       Quest[]
+  inventory    Inventory[]
+}
+
+model Character {
+  id                  String      @id @default(uuid())
+  userId              String      @unique
+  user                User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name                String      @default("Hunter")
+  title               String      @default("Novice Awakened")
+  level               Int         @default(1)
+  currentXp           Int         @default(0)
+  gold                Int         @default(50)
+  streakCount         Int         @default(1)
+  lastActiveDate      DateTime    @default(now())
+  sacrificesThisMonth Int         @default(0)
+  attributes          Attributes?
+}
+
+model Attributes {
+  id          String    @id @default(uuid())
+  characterId String    @unique
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  strLevel    Int       @default(1)
+  strXp       Int       @default(0)
+  intLevel    Int       @default(1)
+  intXp       Int       @default(0)
+  vitLevel    Int       @default(1)
+  vitXp       Int       @default(0)
+  agiLevel    Int       @default(1)
+  agiXp       Int       @default(0)
+  chaLevel    Int       @default(1)
+  chaXp       Int       @default(0)
+}
+
+model Quest {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  category    String    @default("INT") // STR, INT, VIT, AGI, CHA
+  rank        String    @default("E")   // E, D, C, B, A, S
+  xpReward    Int       @default(15)
+  goldReward  Int       @default(5)
+  status      String    @default("PENDING") // PENDING, COMPLETED
+  isDaily     Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+}
+
+model ShopItem {
+  id          String      @id @default(uuid())
+  name        String
+  description String
+  cost        Int
+  type        String      @default("RELIC") // RELIC, REAL_WORLD
+  statBoost   String?
+  iconSlug    String
+  inventories Inventory[]
+}
+
+model Inventory {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itemId     String
+  item       ShopItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  equipped   Boolean  @default(false)
+  acquiredAt DateTime @default(now())
+}
+
+model BossRaid {
+  id          String   @id @default(uuid())
+  name        String   @default("Malakor the Sloth")
+  title       String   @default("Lord of Distraction")
+  maxHp       Int      @default(3000)
+  currentHp   Int      @default(3000)
+  deadline    String   @default("Sunday 23:59 UTC")
+  rewardGold  Int      @default(250)
+  rewardTitle String   @default("Demon Slayer")
+  defeated    Boolean  @default(false)
+}
