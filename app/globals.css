@@ -3,34 +3,34 @@
 @tailwind utilities;
 
 :root {
-  --background: 222 47% 5%;
-  --foreground: 210 40% 98%;
-  --card: 222 47% 9%;
-  --card-foreground: 210 40% 98%;
+  --background: 210 20% 98%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
 
-  --popover: 222 47% 8%;
-  --popover-foreground: 210 40% 98%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
 
-  --primary: 262 83% 66%;
-  --primary-foreground: 210 40% 98%;
+  --primary: 142 71% 45%;
+  --primary-foreground: 0 0% 100%;
 
-  --secondary: 217 25% 17%;
-  --secondary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222 47% 11%;
 
-  --muted: 217 25% 17%;
-  --muted-foreground: 215 20% 65%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
 
-  --accent: 188 86% 53%;
-  --accent-foreground: 222 47% 7%;
+  --accent: 199 89% 48%;
+  --accent-foreground: 0 0% 100%;
 
-  --destructive: 347 77% 50%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
 
-  --border: 217 25% 19%;
-  --input: 217 25% 19%;
-  --ring: 262 83% 66%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 142 71% 45%;
 
-  --radius: 1rem;
+  --radius: 1.25rem;
 }
 
 * {
@@ -39,14 +39,14 @@
 
 html {
   scroll-behavior: smooth;
-  background: #070912;
+  background-color: #f7f9fa;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background: #070912;
-  color: #f8fafc;
+  background-color: #f7f9fa;
+  color: #1e293b;
   font-family:
     Inter,
     ui-sans-serif,
@@ -70,122 +70,137 @@ button {
 }
 
 ::selection {
-  background: rgba(139, 92, 246, 0.35);
-  color: #ffffff;
+  background: rgba(88, 204, 2, 0.3);
+  color: #065f46;
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #080b14;
+  background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #252e42;
+  background: #cbd5e1;
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3b4664;
+  background: #94a3b8;
 }
 
-/* Duolingo-style 3D Tactile Buttons & Elements */
-.btn-3d-emerald {
-  background-color: #10b981;
-  border-bottom: 4px solid #047857;
+/* ============================================================
+   DUOLINGO-STYLE 3D TACTILE BUTTONS (LIGHT & PLAYFUL)
+============================================================ */
+
+.btn-duo-green {
+  background-color: #58cc02;
+  border-bottom: 4px solid #46a302;
+  color: #ffffff;
   transition: all 0.08s ease;
 }
-.btn-3d-emerald:hover {
-  background-color: #059669;
+.btn-duo-green:hover {
+  background-color: #61e002;
 }
-.btn-3d-emerald:active {
+.btn-duo-green:active {
   border-bottom-width: 0px;
   transform: translateY(4px);
 }
 
-.btn-3d-indigo {
-  background-color: #6366f1;
-  border-bottom: 4px solid #4338ca;
+.btn-duo-blue {
+  background-color: #1cb0f6;
+  border-bottom: 4px solid #1899d6;
+  color: #ffffff;
   transition: all 0.08s ease;
 }
-.btn-3d-indigo:hover {
-  background-color: #4f46e5;
+.btn-duo-blue:hover {
+  background-color: #20b8ff;
 }
-.btn-3d-indigo:active {
+.btn-duo-blue:active {
   border-bottom-width: 0px;
   transform: translateY(4px);
 }
 
-.btn-3d-violet {
-  background-color: #8b5cf6;
-  border-bottom: 4px solid #6d28d9;
+.btn-duo-amber {
+  background-color: #ffc800;
+  border-bottom: 4px solid #e5a500;
+  color: #78350f;
   transition: all 0.08s ease;
 }
-.btn-3d-violet:hover {
-  background-color: #7c3aed;
+.btn-duo-amber:hover {
+  background-color: #ffd21a;
 }
-.btn-3d-violet:active {
+.btn-duo-amber:active {
   border-bottom-width: 0px;
   transform: translateY(4px);
 }
 
-.btn-3d-amber {
-  background-color: #f59e0b;
-  border-bottom: 4px solid #b45309;
+.btn-duo-red {
+  background-color: #ff4b4b;
+  border-bottom: 4px solid #ea2b2b;
+  color: #ffffff;
   transition: all 0.08s ease;
 }
-.btn-3d-amber:hover {
-  background-color: #d97706;
+.btn-duo-red:hover {
+  background-color: #ff5c5c;
 }
-.btn-3d-amber:active {
+.btn-duo-red:active {
   border-bottom-width: 0px;
   transform: translateY(4px);
 }
 
-.btn-3d-rose {
-  background-color: #f43f5e;
-  border-bottom: 4px solid #be123c;
+.btn-duo-purple {
+  background-color: #ce82ff;
+  border-bottom: 4px solid #a855f7;
+  color: #ffffff;
   transition: all 0.08s ease;
 }
-.btn-3d-rose:hover {
-  background-color: #e11d48;
+.btn-duo-purple:hover {
+  background-color: #d896ff;
 }
-.btn-3d-rose:active {
+.btn-duo-purple:active {
   border-bottom-width: 0px;
   transform: translateY(4px);
 }
 
-.btn-3d-slate {
-  background-color: #1e293b;
-  border: 1px solid #334155;
-  border-bottom: 4px solid #0f172a;
+.btn-duo-white {
+  background-color: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-bottom: 4px solid #cbd5e1;
+  color: #334155;
   transition: all 0.08s ease;
 }
-.btn-3d-slate:hover {
-  background-color: #334155;
+.btn-duo-white:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
 }
-.btn-3d-slate:active {
-  border-bottom-width: 1px;
-  transform: translateY(3px);
+.btn-duo-white:active {
+  border-bottom-width: 2px;
+  transform: translateY(2px);
 }
 
-/* Duolingo-style Chunky 3D Game Cards */
-.card-duo {
-  background: #111827;
-  border: 2px solid #1f2937;
-  border-bottom: 5px solid #0f172a;
+/* ============================================================
+   DUOLINGO-STYLE 3D TACTILE GAME CARDS
+============================================================ */
+
+.card-duo-light {
+  background-color: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-bottom: 4px solid #cbd5e1;
   border-radius: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
   transition: all 0.15s ease;
 }
-.card-duo:hover {
-  border-color: #374151;
+.card-duo-light:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
 }
 
-/* Juicy Progress Bar with glossy top highlight */
+/* Juicy Progress Bar with glossy shine */
 .bar-juicy {
   position: relative;
   overflow: hidden;
@@ -198,51 +213,14 @@ button {
   left: 4px;
   right: 4px;
   height: 38%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.05) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.05) 100%);
   border-radius: 9999px;
   pointer-events: none;
 }
 
-/* Shared Aetheria surfaces */
-@layer utilities {
-  .glass-panel {
-    background: linear-gradient(135deg, rgba(17, 24, 39, 0.88), rgba(9, 12, 22, 0.82));
-    border: 1px solid rgba(148, 163, 184, 0.14);
-    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(18px);
-  }
-
-  .surface-border {
-    border-color: rgba(148, 163, 184, 0.13);
-  }
-
-  .premium-shadow {
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38), 0 0 40px rgba(124, 58, 237, 0.06);
-  }
-}
-
-/* Controlled glows */
-.glow-gold {
-  box-shadow: 0 0 24px rgba(245, 196, 81, 0.22);
-}
-
-.glow-cyan {
-  box-shadow: 0 0 24px rgba(34, 211, 238, 0.22);
-}
-
-.glow-purple {
-  box-shadow: 0 0 28px rgba(139, 92, 246, 0.24);
-}
-
-.glow-rose {
-  box-shadow: 0 0 28px rgba(244, 63, 94, 0.2);
-}
-
-/* Subtle RPG grid */
-.aether-grid {
+/* Clean playful background grid */
+.game-grid {
   background-image:
-    linear-gradient(rgba(148, 163, 184, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.035) 1px, transparent 1px);
-  background-size: 42px 42px;
-  mask-image: linear-gradient(to bottom, black, transparent 85%);
+    radial-gradient(#e2e8f0 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
 }

@@ -2,228 +2,272 @@
 
 import React, { useState } from "react";
 import {
-  LayoutDashboard,
   Swords,
   Skull,
   Backpack,
   Store,
-  Trophy,
+  UserCheck,
   Menu,
   X,
-  Command,
-  ChevronRight,
+  Flame,
+  Coins,
+  Sparkles,
   Shield,
+  Moon,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AudioController } from "@/components/audio-controller";
+import { useGame, GameViewTab } from "@/lib/game-context";
 
 interface AppShellProps {
   children: React.ReactNode;
 }
 
-const navigation = [
+const navItems: {
+  id: GameViewTab;
+  label: string;
+  icon: React.ElementType;
+  activeColor: string;
+  activeBg: string;
+  activeBorder: string;
+  badge?: string;
+}[] = [
   {
-    label: "Overview",
-    icon: LayoutDashboard,
-    href: "#overview",
-  },
-  {
-    label: "Quests",
+    id: "quests",
+    label: "Daily Quests",
     icon: Swords,
-    href: "#quests",
+    activeColor: "text-emerald-700",
+    activeBg: "bg-emerald-50",
+    activeBorder: "border-emerald-500",
   },
   {
-    label: "Weekly Boss",
+    id: "boss",
+    label: "Boss Arena",
     icon: Skull,
-    href: "#boss",
+    activeColor: "text-rose-700",
+    activeBg: "bg-rose-50",
+    activeBorder: "border-rose-500",
+    badge: "LIVE",
   },
   {
-    label: "Inventory",
-    icon: Backpack,
-    href: "#inventory",
-  },
-  {
+    id: "shop",
     label: "Black Market",
     icon: Store,
-    href: "#market",
+    activeColor: "text-amber-700",
+    activeBg: "bg-amber-50",
+    activeBorder: "border-amber-500",
   },
   {
-    label: "Hunter Honors",
-    icon: Trophy,
-    href: "#honors",
+    id: "inventory",
+    label: "Hunter Vault",
+    icon: Backpack,
+    activeColor: "text-sky-700",
+    activeBg: "bg-sky-50",
+    activeBorder: "border-sky-500",
+  },
+  {
+    id: "profile",
+    label: "Hunter Stats",
+    icon: UserCheck,
+    activeColor: "text-purple-700",
+    activeBg: "bg-purple-50",
+    activeBorder: "border-purple-500",
   },
 ];
 
 export function AppShell({ children }: AppShellProps) {
+  const { character, activeTab, setActiveTab, solitude, loading } = useGame();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const navigate = (href: string) => {
+  const handleSelectTab = (tab: GameViewTab) => {
+    setActiveTab(tab);
     setMobileOpen(false);
-
-    document.querySelector(href)?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
   };
 
   return (
-    <div className="min-h-screen text-slate-100">
-      {/* Ambient background */}
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="aether-grid absolute inset-0 opacity-60" />
-
-        <motion.div
-          animate={{
-            opacity: [0.2, 0.35, 0.2],
-            scale: [1, 1.08, 1],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute left-[20%] top-[-180px] h-[500px] w-[500px] rounded-full bg-purple-600/10 blur-[120px]"
-        />
-
-        <motion.div
-          animate={{
-            opacity: [0.08, 0.18, 0.08],
-            scale: [1, 1.12, 1],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute right-[-120px] top-[20%] h-[420px] w-[420px] rounded-full bg-cyan-500/10 blur-[110px]"
-        />
-      </div>
-
-      {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-[238px] border-r border-slate-800/70 bg-[#080b14]/80 backdrop-blur-2xl lg:block">
-        <div className="flex h-full flex-col">
-          {/* Logo */}
-          <div className="flex h-[78px] items-center border-b border-slate-800/70 px-5">
-            <div className="flex items-center gap-3">
-              <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 via-purple-600 to-amber-500 p-[1px] shadow-lg shadow-purple-900/30">
-                <div className="flex h-full w-full items-center justify-center rounded-[11px] bg-[#090c15]">
-                  <Shield className="h-5 w-5 text-amber-300" />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="font-black tracking-[0.18em] text-white">
-                    AETHERIA
-                  </span>
-
-                  <span className="rounded border border-purple-500/30 bg-purple-500/10 px-1.5 py-0.5 text-[8px] font-bold tracking-wider text-purple-300">
-                    RPG
-                  </span>
-                </div>
-
-                <p className="mt-0.5 text-[10px] text-slate-500">
-                  Hunter Protocol
-                </p>
-              </div>
-            </div>
+    <div className="min-h-screen bg-[#f7f9fa] text-slate-800 antialiased flex flex-col lg:flex-row">
+      {/* ============================================================
+          DESKTOP SIDEBAR (DUOLINGO STYLE: CRISP WHITE, 3D BUTTONS)
+      ============================================================ */}
+      <aside className="hidden lg:flex fixed inset-y-0 left-0 z-40 w-64 flex-col bg-white border-r-2 border-slate-200 select-none shadow-[2px_0_12px_rgba(0,0,0,0.02)]">
+        {/* Brand Header */}
+        <div className="flex h-20 items-center gap-3 px-6 border-b-2 border-slate-100">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-[0_4px_0_#059669] transform -rotate-3 hover:rotate-0 transition-transform">
+            <Shield className="h-6 w-6 fill-white/20" />
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 space-y-1 px-3 py-5">
-            <p className="mb-3 px-3 text-[9px] font-bold uppercase tracking-[0.22em] text-slate-600">
-              Guild Interface
+          <div>
+            <div className="flex items-center gap-1.5">
+              <span className="font-black text-xl tracking-tight text-slate-900">
+                AETHERIA
+              </span>
+              <span className="rounded-md bg-emerald-100 px-1.5 py-0.5 text-[10px] font-black text-emerald-700">
+                RPG
+              </span>
+            </div>
+            <p className="text-[11px] font-bold text-slate-600">
+              The Hunter&apos;s Protocol
             </p>
+          </div>
+        </div>
 
-            {navigation.map((item, index) => {
-              const Icon = item.icon;
+        {/* Navigation Menu */}
+        <nav className="flex-1 space-y-2 p-4">
+          <p className="px-3 text-[10px] font-black uppercase tracking-wider text-slate-600 mb-2">
+            Game Menu
+          </p>
 
-              return (
-                <motion.button
-                  key={item.label}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.04 }}
-                  onClick={() => navigate(item.href)}
-                  className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-slate-400 transition-all hover:bg-white/[0.045] hover:text-white"
-                >
-                  <Icon className="h-[17px] w-[17px] transition-transform group-hover:scale-110 group-hover:text-purple-400" />
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
 
-                  <span className="flex-1">{item.label}</span>
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => handleSelectTab(item.id)}
+                className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-black text-xs uppercase tracking-wider transition-all duration-100 text-left ${
+                  isActive
+                    ? `${item.activeBg} ${item.activeColor} border-2 ${item.activeBorder} shadow-[0_3px_0_rgba(0,0,0,0.06)] translate-y-0`
+                    : "text-slate-600 hover:bg-slate-100/80 hover:text-slate-900 border-2 border-transparent"
+                }`}
+              >
+                <Icon
+                  className={`h-5 w-5 shrink-0 ${
+                    isActive ? item.activeColor : "text-slate-600"
+                  }`}
+                />
+                <span className="flex-1">{item.label}</span>
 
-                  <ChevronRight className="h-3.5 w-3.5 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-40" />
-                </motion.button>
-              );
-            })}
-          </nav>
+                {item.badge && (
+                  <span className="rounded-full bg-rose-500 px-2 py-0.5 text-[9px] font-black text-white animate-pulse">
+                    {item.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </nav>
 
-          {/* Command hint */}
-          <div className="px-4 pb-4">
-            <div className="rounded-xl border border-slate-800/80 bg-slate-950/60 p-3">
-              <div className="flex items-center gap-2 text-[10px] text-slate-500">
-                <Command className="h-3.5 w-3.5" />
-
-                <span>Quick actions</span>
-
-                <kbd className="ml-auto rounded border border-slate-700 bg-slate-900 px-1.5 py-0.5 font-mono text-[9px] text-slate-400">
-                  Ctrl K
-                </kbd>
-              </div>
+        {/* Hunter Quick Rank Footer */}
+        <div className="p-4 border-t-2 border-slate-100">
+          <div className="rounded-2xl border-2 border-slate-100 bg-slate-50 p-3 flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 text-purple-600 font-black text-sm">
+              L{character.level}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-black text-slate-800 truncate">
+                {character.name}
+              </p>
+              <p className="text-[11px] font-bold text-slate-600 truncate">
+                {character.title}
+              </p>
             </div>
           </div>
         </div>
       </aside>
 
-      {/* Main application area */}
-      <div className="lg:pl-[238px]">
-        {/* Header */}
-        <header className="sticky top-0 z-30 border-b border-slate-800/70 bg-[#080b14]/75 backdrop-blur-2xl">
-          <div className="mx-auto flex h-[68px] max-w-[1500px] items-center justify-between px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-3 lg:hidden">
-              <button
-                onClick={() => setMobileOpen(true)}
-                className="rounded-xl border border-slate-800 bg-slate-900/70 p-2 text-slate-300"
-                aria-label="Open navigation"
-              >
-                <Menu className="h-5 w-5" />
-              </button>
+      {/* ============================================================
+          MAIN CONTENT WRAPPER
+      ============================================================ */}
+      <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
+        {/* TOP GAME HUD HEADER */}
+        <header className="sticky top-0 z-30 flex h-18 items-center justify-between border-b-2 border-slate-200 bg-white/95 backdrop-blur-md px-4 sm:px-6 lg:px-8">
+          {/* Mobile hamburger & brand */}
+          <div className="flex items-center gap-3 lg:hidden">
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              className="rounded-xl border-2 border-slate-200 bg-white p-2 text-slate-700 shadow-sm active:translate-y-0.5"
+              aria-label="Open menu"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
 
-              <span className="font-black tracking-[0.16em] text-white">
-                AETHERIA
+            <span className="font-black tracking-tight text-lg text-slate-900">
+              AETHERIA
+            </span>
+          </div>
+
+          {/* Current view indicator (Desktop) */}
+          <div className="hidden lg:flex items-center gap-2">
+            <span className="text-sm font-black uppercase tracking-wider text-slate-600">
+              Current View:
+            </span>
+            <span className="rounded-xl bg-slate-100 px-3 py-1 text-xs font-black text-slate-800 border border-slate-200">
+              {navItems.find((n) => n.id === activeTab)?.label}
+            </span>
+
+            {loading && (
+              <span className="flex items-center gap-1.5 text-xs text-cyan-600 font-bold ml-2">
+                <Sparkles className="w-3.5 h-3.5 animate-spin" />
+                Cloud sync...
+              </span>
+            )}
+          </div>
+
+          {/* DUOLINGO-STYLE GAME STATS HUD (RIGHT) */}
+          <div className="flex items-center gap-2 sm:gap-3 ml-auto">
+            {/* Streak Flame Pill */}
+            <div
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border-2 border-amber-200 bg-amber-50 text-amber-900 shadow-sm"
+              title={`${character.streakCount} Day Streak active!`}
+            >
+              <Flame className="w-4 h-4 text-orange-500 fill-orange-500 animate-bounce" />
+              <span className="font-black text-xs font-mono">
+                {character.streakCount}
               </span>
             </div>
 
-            <div className="hidden lg:block">
-              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-600">
-                Hunter Command Center
-              </p>
-
-              <p className="text-sm font-semibold text-slate-300">
-                Your progression. Your protocol.
-              </p>
+            {/* Gold Pill */}
+            <div
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border-2 border-yellow-200 bg-yellow-50 text-yellow-900 shadow-sm"
+              title={`${character.gold.toLocaleString()} Gold available`}
+            >
+              <Coins className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+              <span className="font-black text-xs font-mono">
+                {character.gold.toLocaleString()}
+              </span>
             </div>
 
-            <div className="ml-auto flex items-center gap-2">
-              <div className="hidden items-center gap-2 rounded-xl border border-slate-800/80 bg-slate-900/60 px-3 py-2 sm:flex">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
+            {/* Level Pill */}
+            <div
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border-2 border-sky-200 bg-sky-50 text-sky-900 shadow-sm"
+              title={`Hunter Level ${character.level} • ${character.currentXp}/${character.requiredXp} XP`}
+            >
+              <span className="flex h-5 w-5 items-center justify-center rounded-lg bg-sky-500 text-[10px] font-black text-white">
+                ★
+              </span>
+              <span className="font-black text-xs font-mono">
+                LVL {character.level}
+              </span>
+            </div>
 
-                <span className="text-[10px] font-medium text-slate-400">
-                  Guild Online
-                </span>
+            {/* Solitude Multiplier Pill */}
+            {solitude.isActive && (
+              <div
+                className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-2xl border-2 border-purple-200 bg-purple-50 text-purple-900 shadow-sm text-xs font-black"
+                title="Off-peak night grind active! +50% XP multiplier"
+              >
+                <Moon className="w-3.5 h-3.5 text-purple-600 fill-purple-200" />
+                <span>{solitude.multiplier}x XP</span>
               </div>
+            )}
 
-              <AudioController />
-            </div>
+            {/* SFX Audio Controller */}
+            <AudioController />
           </div>
         </header>
 
-        {/* Content */}
-        <main className="mx-auto w-full max-w-[1500px] px-4 py-5 sm:px-6 sm:py-7 lg:px-8 lg:py-8">
+        {/* MAIN BODY VIEW */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-6xl w-full mx-auto">
           {children}
         </main>
       </div>
 
-      {/* Mobile navigation */}
+      {/* ============================================================
+          MOBILE DRAWER MODAL
+      ============================================================ */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -232,53 +276,67 @@ export function AppShell({ children }: AppShellProps) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileOpen(false)}
-              className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm lg:hidden"
             />
 
             <motion.aside
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              transition={{
-                type: "spring",
-                stiffness: 320,
-                damping: 30,
-              }}
-              className="fixed inset-y-0 left-0 z-[60] w-[285px] border-r border-slate-800 bg-[#090c15] shadow-2xl lg:hidden"
+              transition={{ type: "spring", stiffness: 320, damping: 30 }}
+              className="fixed inset-y-0 left-0 z-[60] w-72 bg-white border-r-2 border-slate-200 shadow-2xl lg:hidden flex flex-col"
             >
-              <div className="flex h-full flex-col">
-                <div className="flex h-[76px] items-center justify-between border-b border-slate-800 px-5">
-                  <div className="flex items-center gap-3">
-                    <Shield className="h-5 w-5 text-amber-300" />
-                    <span className="font-black tracking-[0.18em]">
-                      AETHERIA
-                    </span>
+              <div className="flex h-18 items-center justify-between border-b-2 border-slate-100 px-5">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500 text-white">
+                    <Shield className="h-5 w-5 fill-white/20" />
                   </div>
-
-                  <button
-                    onClick={() => setMobileOpen(false)}
-                    className="rounded-lg p-2 text-slate-400 hover:bg-white/5 hover:text-white"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
+                  <span className="font-black text-lg tracking-tight text-slate-900">
+                    AETHERIA
+                  </span>
                 </div>
 
-                <nav className="flex-1 space-y-1 p-4">
-                  {navigation.map((item) => {
-                    const Icon = item.icon;
+                <button
+                  type="button"
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-xl p-2 text-slate-500 hover:bg-slate-100"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
 
-                    return (
-                      <button
-                        key={item.label}
-                        onClick={() => navigate(item.href)}
-                        className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-slate-300 transition-colors hover:bg-purple-500/10 hover:text-white"
-                      >
-                        <Icon className="h-5 w-5 text-slate-500" />
-                        {item.label}
-                      </button>
-                    );
-                  })}
-                </nav>
+              <nav className="flex-1 space-y-2 p-4">
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = activeTab === item.id;
+
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => handleSelectTab(item.id)}
+                      className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl font-black text-sm uppercase tracking-wider ${
+                        isActive
+                          ? `${item.activeBg} ${item.activeColor} border-2 ${item.activeBorder}`
+                          : "text-slate-600 hover:bg-slate-100"
+                      }`}
+                    >
+                      <Icon className="h-5 w-5" />
+                      <span className="flex-1">{item.label}</span>
+                      {item.badge && (
+                        <span className="rounded-full bg-rose-500 px-2 py-0.5 text-[9px] font-black text-white">
+                          {item.badge}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </nav>
+
+              <div className="p-4 border-t-2 border-slate-100">
+                <p className="text-xs font-bold text-slate-600">
+                  Logged in as {character.name} (Lvl {character.level})
+                </p>
               </div>
             </motion.aside>
           </>
