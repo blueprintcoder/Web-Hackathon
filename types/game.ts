@@ -65,6 +65,7 @@ export interface Character {
    * one or more required activity days.
    */
   streakBroken: boolean;
+  streakAtBreak?: number;
 
   /**
    * Number of Soul Sacrifices used
