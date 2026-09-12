@@ -1,6 +1,35 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 
+// GET all shop items & user inventory
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
+
+    const items = await prisma.shopItem.findMany({
+      orderBy: { cost: 'asc' },
+    });
+
+    const inventory = userId
+      ? await prisma.inventory.findMany({
+          where: { userId },
+          include: { item: true },
+        })
+      : [];
+
+    return NextResponse.json({
+      success: true,
+      items,
+      inventory,
+    });
+  } catch (error) {
+    console.error('Error fetching shop items:', error);
+    return NextResponse.json({ success: false, error: 'Failed to fetch shop items' }, { status: 500 });
+  }
+}
+
+// POST purchase item
 export async function POST(request: Request) {
   try {
     const body = await request.json();
