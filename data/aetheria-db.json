@@ -1,0 +1,193 @@
+{
+  "users": [
+    {
+      "id": "user-demo-judge",
+      "email": "demo@aetheria.rpg",
+      "passwordHash": "0ead2060b65992dca4769af601a1b3a35ef38cfad2c2c465bb160ea764157c5d",
+      "createdAt": "2026-09-12T23:32:28.353Z"
+    }
+  ],
+  "characters": [
+    {
+      "id": "char-demo-judge",
+      "userId": "user-demo-judge",
+      "name": "Jin-Woo",
+      "title": "Shadow Monarch Apprentice",
+      "level": 3,
+      "currentXp": 185,
+      "gold": 60,
+      "streakCount": 5,
+      "lastActiveDate": "2026-09-12T23:32:28.353Z",
+      "sacrificesThisMonth": 0
+    }
+  ],
+  "attributes": [
+    {
+      "id": "attr-demo-judge",
+      "characterId": "char-demo-judge",
+      "strLevel": 4,
+      "strXp": 75,
+      "intLevel": 6,
+      "intXp": 110,
+      "vitLevel": 3,
+      "vitXp": 40,
+      "agiLevel": 4,
+      "agiXp": 60,
+      "chaLevel": 2,
+      "chaXp": 20
+    }
+  ],
+  "quests": [
+    {
+      "id": "quest-1",
+      "userId": "user-demo-judge",
+      "title": "Morning Hydration Rite",
+      "description": "Drink 500ml pure water upon waking to cleanse bodily toxins.",
+      "category": "VIT",
+      "rank": "E",
+      "xpReward": 15,
+      "goldReward": 5,
+      "status": "PENDING",
+      "isDaily": true,
+      "createdAt": "2026-09-12T23:32:28.353Z"
+    },
+    {
+      "id": "quest-2",
+      "userId": "user-demo-judge",
+      "title": "Deep Work Coding Block",
+      "description": "Implement database connection and API routes without tab-switching.",
+      "category": "INT",
+      "rank": "B",
+      "xpReward": 75,
+      "goldReward": 35,
+      "status": "PENDING",
+      "isDaily": false,
+      "createdAt": "2026-09-12T23:32:28.353Z"
+    },
+    {
+      "id": "quest-3",
+      "userId": "user-demo-judge",
+      "title": "Hunter's Physical Conditioning",
+      "description": "50 push-ups, 50 squats, 2km jog to maintain battle readiness.",
+      "category": "STR",
+      "rank": "C",
+      "xpReward": 40,
+      "goldReward": 20,
+      "status": "PENDING",
+      "isDaily": true,
+      "createdAt": "2026-09-12T23:32:28.353Z"
+    },
+    {
+      "id": "quest-4",
+      "userId": "user-demo-judge",
+      "title": "Inbox Zero Sweep",
+      "description": "Purge all unread notifications and organize project tasks.",
+      "category": "AGI",
+      "rank": "D",
+      "xpReward": 25,
+      "goldReward": 10,
+      "status": "COMPLETED",
+      "isDaily": true,
+      "createdAt": "2026-09-12T23:32:28.353Z",
+      "completedAt": "2026-09-12T23:32:28.353Z"
+    },
+    {
+      "id": "quest-5",
+      "userId": "user-demo-judge",
+      "title": "Guild Synchronization Standup",
+      "description": "Deliver crisp 5-minute progress report to the party.",
+      "category": "CHA",
+      "rank": "C",
+      "xpReward": 40,
+      "goldReward": 20,
+      "status": "PENDING",
+      "isDaily": false,
+      "createdAt": "2026-09-12T23:32:28.353Z"
+    }
+  ],
+  "shopItems": [
+    {
+      "id": "item-1",
+      "name": "Scroll of Focus",
+      "description": "Ancient papyrus granting +10% INT XP on all coding and study bounties.",
+      "cost": 80,
+      "type": "RELIC",
+      "statBoost": "+10% INT XP",
+      "iconSlug": "scroll"
+    },
+    {
+      "id": "item-2",
+      "name": "Aegis Streak Shield",
+      "description": "Golden talisman that automatically freezes and preserves your streak if you miss a day.",
+      "cost": 150,
+      "type": "RELIC",
+      "statBoost": "Streak Freeze (1x)",
+      "iconSlug": "shield"
+    },
+    {
+      "id": "item-3",
+      "name": "XP Surge Elixir",
+      "description": "Brewed potion granting 2x XP multiplier for your next 3 completed bounties.",
+      "cost": 120,
+      "type": "RELIC",
+      "statBoost": "2x XP (3 charges)",
+      "iconSlug": "potion"
+    },
+    {
+      "id": "item-4",
+      "name": "1-Hour Gaming Pass",
+      "description": "Real-world permission token: 60 minutes of completely guilt-free video game time.",
+      "cost": 100,
+      "type": "REAL_WORLD",
+      "statBoost": "Real-Life Reward",
+      "iconSlug": "gamepad"
+    },
+    {
+      "id": "item-5",
+      "name": "Guilt-Free Cheat Meal",
+      "description": "Real-world permission token: Order pizza, burgers, or sushi without regret.",
+      "cost": 300,
+      "type": "REAL_WORLD",
+      "statBoost": "Real-Life Reward",
+      "iconSlug": "pizza"
+    },
+    {
+      "id": "item-6",
+      "name": "Sleep-In / Day-Off Pass",
+      "description": "Real-world permission token: Turn off the morning alarm and rest deeply.",
+      "cost": 400,
+      "type": "REAL_WORLD",
+      "statBoost": "Real-Life Reward",
+      "iconSlug": "moon"
+    }
+  ],
+  "inventory": [
+    {
+      "id": "inv-1",
+      "userId": "user-demo-judge",
+      "itemId": "item-1",
+      "equipped": true,
+      "acquiredAt": "2026-09-12T23:32:28.353Z"
+    },
+    {
+      "id": "test-inv-1789256173239",
+      "userId": "user-demo-judge",
+      "itemId": "item-1",
+      "equipped": true,
+      "acquiredAt": "2026-09-12T23:36:13.239Z"
+    }
+  ],
+  "bossRaids": [
+    {
+      "id": "boss-01",
+      "name": "Malakor the Sloth",
+      "title": "Lord of Distraction & Procrastination",
+      "maxHp": 3000,
+      "currentHp": 2180,
+      "deadline": "Sunday 23:59 UTC",
+      "rewardGold": 250,
+      "rewardTitle": "Demon Slayer of Aetheria",
+      "defeated": false
+    }
+  ]
+}

@@ -24,7 +24,13 @@ import { playSfx } from "@/lib/audio";
 
 export type GameViewTab = "quests" | "boss" | "shop" | "inventory" | "profile";
 
+export interface CurrentUser {
+  id: string;
+  email: string;
+}
+
 interface GameContextValue {
+  currentUser: CurrentUser | null;
   character: Character;
   quests: Quest[];
   boss: BossRaid;
@@ -37,6 +43,12 @@ interface GameContextValue {
   isLevelUpOpen: boolean;
   setIsLevelUpOpen: (open: boolean) => void;
   newLevelAnnounced: number;
+  isAuthModalOpen: boolean;
+  setIsAuthModalOpen: (open: boolean) => void;
+  handleLogin: (email: string, pass: string) => Promise<{ success: boolean; error?: string }>;
+  handleRegister: (email: string, pass: string, name: string) => Promise<{ success: boolean; error?: string }>;
+  handleLogout: () => Promise<void>;
+  handleQuickDemoLogin: () => Promise<void>;
   handleCompleteQuest: (questId: string) => Promise<void>;
   handleCreateQuest: (newQuestData: Partial<Quest>) => Promise<void>;
   handlePurchaseItem: (item: ShopItem) => Promise<void>;
@@ -56,6 +68,7 @@ export function useGame(): GameContextValue {
 }
 
 export function GameProvider({ children }: { children: React.ReactNode }) {
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [character, setCharacter] = useState<Character>(mockCharacter);
   const [quests, setQuests] = useState<Quest[]>(mockQuests);
   const [boss, setBoss] = useState<BossRaid>(mockBoss);
@@ -66,6 +79,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const [isLevelUpOpen, setIsLevelUpOpen] = useState(false);
   const [newLevelAnnounced, setNewLevelAnnounced] = useState(mockCharacter.level);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const solitude = getSolitudeMultiplier();
 
@@ -78,52 +92,83 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const xpSurge = equippedRelics.find((item) => item.item.id === "item-3");
   const hasXpSurge = Boolean(xpSurge) && (xpSurge?.charges ?? 0) > 0;
 
-  // Load cloud data
+  // Load user data helper
+  const loadUserData = async (userId: string) => {
+    try {
+      const [charRes, questsRes, bossRes, shopRes] = await Promise.all([
+        fetch(`/api/character?userId=${userId}`),
+        fetch(`/api/quests?userId=${userId}`),
+        fetch("/api/boss"),
+        fetch(`/api/shop?userId=${userId}`),
+      ]);
+
+      const [charData, questsData, bossData, shopData] = await Promise.all([
+        charRes.json(),
+        questsRes.json(),
+        bossRes.json(),
+        shopRes.json(),
+      ]);
+
+      if (charData.success && charData.character) {
+        setCharacter(charData.character);
+        setNewLevelAnnounced(charData.character.level);
+      }
+
+      if (questsData.success && questsData.quests) {
+        setQuests(questsData.quests);
+      }
+
+      if (bossData.success && bossData.boss) {
+        setBoss(bossData.boss);
+      }
+
+      if (shopData.success) {
+        if (shopData.items?.length > 0) {
+          setShopItems(shopData.items);
+        }
+        if (shopData.inventory) {
+          setInventory(shopData.inventory);
+        }
+      }
+    } catch (err) {
+      console.warn("Error loading user data from backend:", err);
+    }
+  };
+
+  // Initial session verification & cloud data load
   useEffect(() => {
     let cancelled = false;
 
-    async function loadCloudData() {
+    async function initSession() {
       try {
-        const authRes = await fetch("/api/auth/demo", { method: "POST" });
-        const authData = await authRes.json();
+        // Check if there is an active session
+        const meRes = await fetch("/api/auth/me");
+        const meData = await meRes.json();
 
-        if (!authData.success || !authData.user) return;
-        const userId = authData.user.id;
+        let userId = "user-demo-judge";
 
-        const [charRes, questsRes, bossRes, shopRes] = await Promise.all([
-          fetch(`/api/character?userId=${userId}`),
-          fetch(`/api/quests?userId=${userId}`),
-          fetch("/api/boss"),
-          fetch(`/api/shop?userId=${userId}`),
-        ]);
-
-        const [charData, questsData, bossData, shopData] = await Promise.all([
-          charRes.json(),
-          questsRes.json(),
-          bossRes.json(),
-          shopRes.json(),
-        ]);
-
-        if (cancelled) return;
-
-        if (charData.success && charData.character) {
-          setCharacter(charData.character);
-          setNewLevelAnnounced(charData.character.level);
+        if (meData.success && meData.user) {
+          if (!cancelled) {
+            setCurrentUser({ id: meData.user.id, email: meData.user.email });
+          }
+          userId = meData.user.id;
+        } else {
+          // Initialize demo session
+          const demoRes = await fetch("/api/auth/demo", { method: "POST" });
+          const demoData = await demoRes.json();
+          if (demoData.success && demoData.user) {
+            if (!cancelled) {
+              setCurrentUser({ id: demoData.user.id, email: demoData.user.email });
+            }
+            userId = demoData.user.id;
+          }
         }
 
-        if (questsData.success && questsData.quests?.length > 0) {
-          setQuests(questsData.quests);
-        }
-
-        if (bossData.success && bossData.boss) {
-          setBoss(bossData.boss);
-        }
-
-        if (shopData.success && shopData.items?.length > 0) {
-          setShopItems(shopData.items);
+        if (!cancelled) {
+          await loadUserData(userId);
         }
       } catch (error) {
-        console.warn("Cloud data unavailable. Using local state.", error);
+        console.warn("Session init error, using local state.", error);
       } finally {
         if (!cancelled) {
           setLoading(false);
@@ -131,12 +176,77 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    loadCloudData();
+    initSession();
 
     return () => {
       cancelled = true;
     };
   }, []);
+
+  // AUTH: Login
+  const handleLogin = async (email: string, pass: string) => {
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password: pass }),
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        setCurrentUser({ id: data.user.id, email: data.user.email });
+        await loadUserData(data.user.id);
+        return { success: true };
+      }
+      return { success: false, error: data.error || "Login failed" };
+    } catch (e) {
+      return { success: false, error: "Network error during login" };
+    }
+  };
+
+  // AUTH: Register
+  const handleRegister = async (email: string, pass: string, name: string) => {
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password: pass, hunterName: name }),
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        setCurrentUser({ id: data.user.id, email: data.user.email });
+        await loadUserData(data.user.id);
+        return { success: true };
+      }
+      return { success: false, error: data.error || "Registration failed" };
+    } catch (e) {
+      return { success: false, error: "Network error during registration" };
+    }
+  };
+
+  // AUTH: Logout
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch (e) {
+      // ignore
+    }
+    setCurrentUser(null);
+    setIsAuthModalOpen(true);
+  };
+
+  // AUTH: 1-Click Judge Demo
+  const handleQuickDemoLogin = async () => {
+    try {
+      const res = await fetch("/api/auth/demo", { method: "POST" });
+      const data = await res.json();
+      if (data.success && data.user) {
+        setCurrentUser({ id: data.user.id, email: data.user.email });
+        await loadUserData(data.user.id);
+      }
+    } catch (e) {
+      console.warn("Demo login error:", e);
+    }
+  };
 
   // Complete Quest
   const handleCompleteQuest = async (questId: string) => {
@@ -167,12 +277,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       if (data.success) {
         if (data.character) {
           setCharacter(data.character);
-        } else {
-          const charRes = await fetch(`/api/character?userId=${character.userId}`);
-          const charData = await charRes.json();
-          if (charData.success && charData.character) {
-            setCharacter(charData.character);
-          }
         }
 
         if (data.levelUp) {
@@ -193,7 +297,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         return;
       }
     } catch (error) {
-      console.warn("Backend quest completion failed, falling back locally.", error);
+      console.warn("Backend quest completion fallback applied.", error);
     }
 
     // Local calculation fallback
@@ -272,9 +376,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   // Create Quest
   const handleCreateQuest = async (newQuestData: Partial<Quest>) => {
     const tempId = `q-${Date.now()}`;
+    const targetUserId = currentUser?.id || character.userId || "user-demo-judge";
+
     const optimisticQuest: Quest = {
       id: tempId,
-      userId: character.userId,
+      userId: targetUserId,
       title: newQuestData.title || "Untitled Bounty",
       description: newQuestData.description || "",
       category: newQuestData.category || "INT",
@@ -298,7 +404,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           category: newQuestData.category,
           rank: newQuestData.rank,
           isDaily: newQuestData.isDaily,
-          userId: character.userId,
+          userId: targetUserId,
         }),
       });
 
@@ -314,7 +420,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Direct Boss Attack
-  const handleAttackBoss = () => {
+  const handleAttackBoss = async () => {
     if (boss.defeated) return;
     playSfx("attack");
     playSfx("roar");
@@ -328,6 +434,16 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         defeated: newHp <= 0,
       };
     });
+
+    try {
+      await fetch("/api/boss", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ damage }),
+      });
+    } catch (e) {
+      // local optimistic already applied
+    }
   };
 
   // Soul Sacrifice
@@ -352,7 +468,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       const res = await fetch("/api/sacrifice", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ characterId: character.id }),
+        body: JSON.stringify({
+          characterId: character.id,
+          userId: currentUser?.id,
+        }),
       });
 
       const data = await res.json();
@@ -360,12 +479,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       if (data.success) {
         if (data.character) {
           setCharacter(data.character);
-        } else {
-          const charRes = await fetch(`/api/character?userId=${character.userId}`);
-          const charData = await charRes.json();
-          if (charData.success && charData.character) {
-            setCharacter(charData.character);
-          }
         }
         alert("Soul Sacrifice accepted! Streak preserved intact.");
         return;
@@ -402,7 +515,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   // Purchase Shop Item
   const handlePurchaseItem = async (item: ShopItem) => {
     if (character.gold < item.cost) {
-      alert("Insufficient gold! Complete more quests to earn gold.");
+      alert(`Insufficient gold! Item costs ${item.cost} 🪙, but you only have ${character.gold} 🪙.`);
       return;
     }
 
@@ -415,6 +528,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         body: JSON.stringify({
           itemId: item.id,
           characterId: character.id,
+          userId: currentUser?.id || character.userId,
         }),
       });
 
@@ -422,21 +536,31 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
       if (data.success) {
         if (data.character) {
-          setCharacter((prev) => ({ ...prev, ...data.character }));
+          setCharacter((prev) => ({
+            ...prev,
+            gold: data.character.gold,
+          }));
         }
-        alert(`Acquired ${item.name}! Added to your inventory.`);
+
+        // CRITICAL FIX: Append the returned inventory item so it immediately appears in the Vault!
+        if (data.inventory) {
+          setInventory((prev) => [data.inventory, ...prev]);
+        }
+
+        alert(`Acquired ${item.name}! Added to your Hunter Vault.`);
         return;
       }
+
       alert(data.error || "Purchase failed.");
       return;
     } catch (error) {
-      console.warn("Cloud shop unavailable. Local purchase applied.", error);
+      console.warn("Cloud shop error, falling back locally:", error);
     }
 
     // Local fallback
     if (
       item.type === "RELIC" &&
-      inventory.some((inventoryItem) => inventoryItem.itemId === item.id)
+      inventory.some((inv) => inv.itemId === item.id)
     ) {
       alert("You already own this relic.");
       return;
@@ -449,15 +573,16 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
     const newInventoryItem: InventoryItem = {
       id: `inventory-${Date.now()}-${item.id}`,
-      userId: character.id || "mock-user",
+      userId: character.userId || "user-demo-judge",
       itemId: item.id,
       item,
-      equipped: false,
+      equipped: item.type === "RELIC",
       acquiredAt: new Date().toISOString(),
       charges: item.id === "item-3" ? 3 : undefined,
     };
 
     setInventory((prev) => [newInventoryItem, ...prev]);
+    alert(`Acquired ${item.name}! Added to your Hunter Vault.`);
   };
 
   // Toggle Equip Item
@@ -470,6 +595,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   };
 
   const value: GameContextValue = {
+    currentUser,
     character,
     quests,
     boss,
@@ -482,6 +608,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     isLevelUpOpen,
     setIsLevelUpOpen,
     newLevelAnnounced,
+    isAuthModalOpen,
+    setIsAuthModalOpen,
+    handleLogin,
+    handleRegister,
+    handleLogout,
+    handleQuickDemoLogin,
     handleCompleteQuest,
     handleCreateQuest,
     handlePurchaseItem,

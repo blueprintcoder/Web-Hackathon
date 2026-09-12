@@ -1,25 +1,24 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { serverDb } from '@/lib/server-db';
 import { getRankRewards } from '@/lib/rpg-engine';
 import { QuestRank } from '@/types/game';
 
 export const dynamic = 'force-dynamic';
 
-// GET all quests
+// GET all quests for user
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
+    const userId = searchParams.get('userId') || 'user-demo-judge';
 
-    const quests = await prisma.quest.findMany({
-      where: userId ? { userId } : undefined,
-      orderBy: { createdAt: 'desc' },
-    });
-
+    const quests = serverDb.getQuestsByUserId(userId);
     return NextResponse.json({ success: true, quests });
   } catch (error) {
     console.error('Error fetching quests:', error);
-    return NextResponse.json({ success: false, error: 'Failed to fetch quests' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch quests' },
+      { status: 500 }
+    );
   }
 }
 
@@ -30,39 +29,33 @@ export async function POST(request: Request) {
     const { title, description, category, rank, isDaily, userId } = body;
 
     if (!title || !category || !rank) {
-      return NextResponse.json({ success: false, error: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: 'Title, category, and rank are required.' },
+        { status: 400 }
+      );
     }
 
-    const rewards = getRankRewards(rank as QuestRank);
+    const rewards = getRankRewards((rank || 'C') as QuestRank);
+    const targetUserId = userId || 'user-demo-judge';
 
-    // If userId not provided, fallback to finding demo user
-    let targetUserId = userId;
-    if (!targetUserId) {
-      const demo = await prisma.user.findFirst();
-      targetUserId = demo?.id;
-    }
-
-    if (!targetUserId) {
-      return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
-    }
-
-    const quest = await prisma.quest.create({
-      data: {
-        userId: targetUserId,
-        title,
-        description: description || '',
-        category,
-        rank,
-        xpReward: rewards.xp,
-        goldReward: rewards.gold,
-        isDaily: Boolean(isDaily),
-        status: 'PENDING',
-      },
+    const quest = serverDb.createQuest({
+      userId: targetUserId,
+      title: title.trim(),
+      description: description ? description.trim() : '',
+      category,
+      rank,
+      xpReward: rewards.xp,
+      goldReward: rewards.gold,
+      isDaily: Boolean(isDaily),
+      status: 'PENDING',
     });
 
     return NextResponse.json({ success: true, quest });
   } catch (error) {
     console.error('Error creating quest:', error);
-    return NextResponse.json({ success: false, error: 'Failed to create quest' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: 'Failed to create quest' },
+      { status: 500 }
+    );
   }
 }

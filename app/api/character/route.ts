@@ -1,71 +1,72 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { serverDb } from '@/lib/server-db';
 import { getRequiredXP, getFeatDescription } from '@/lib/rpg-engine';
-import { AttributeKey } from '@/types/game';
 
 export const dynamic = 'force-dynamic';
 
-// GET character profile & attributes
+// GET character profile & formatted attributes
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
+    const userId = searchParams.get('userId') || 'user-demo-judge';
 
-    let character = await prisma.character.findFirst({
-      where: userId ? { userId } : undefined,
-      include: {
-        attributes: true,
-      },
-    });
-
+    let character = serverDb.getCharacterByUserId(userId);
     if (!character) {
-      // Create default demo character if none exists
-      const demoUser = await prisma.user.findFirst();
-      if (demoUser) {
-        character = await prisma.character.findUnique({
-          where: { userId: demoUser.id },
-          include: { attributes: true },
-        });
-      }
+      character = serverDb.getCharacterByUserId('user-demo-judge');
     }
 
     if (!character) {
-      return NextResponse.json({ success: false, error: 'Character not found' }, { status: 404 });
+      return NextResponse.json(
+        { success: false, error: 'Character not found' },
+        { status: 404 }
+      );
     }
+
+    const attrs = serverDb.getAttributesByCharacterId(character.id) || {
+      strLevel: 1,
+      strXp: 0,
+      intLevel: 1,
+      intXp: 0,
+      vitLevel: 1,
+      vitXp: 0,
+      agiLevel: 1,
+      agiXp: 0,
+      chaLevel: 1,
+      chaXp: 0,
+    };
 
     const reqXp = getRequiredXP(character.level);
-    const attrs = character.attributes;
 
     const formattedAttributes = {
       STR: {
-        level: attrs?.strLevel || 1,
-        currentXp: attrs?.strXp || 0,
-        requiredXp: getRequiredXP(attrs?.strLevel || 1),
-        featDescription: getFeatDescription('STR', attrs?.strLevel || 1),
+        level: attrs.strLevel,
+        currentXp: attrs.strXp,
+        requiredXp: getRequiredXP(attrs.strLevel),
+        featDescription: getFeatDescription('STR', attrs.strLevel),
       },
       INT: {
-        level: attrs?.intLevel || 1,
-        currentXp: attrs?.intXp || 0,
-        requiredXp: getRequiredXP(attrs?.intLevel || 1),
-        featDescription: getFeatDescription('INT', attrs?.intLevel || 1),
+        level: attrs.intLevel,
+        currentXp: attrs.intXp,
+        requiredXp: getRequiredXP(attrs.intLevel),
+        featDescription: getFeatDescription('INT', attrs.intLevel),
       },
       VIT: {
-        level: attrs?.vitLevel || 1,
-        currentXp: attrs?.vitXp || 0,
-        requiredXp: getRequiredXP(attrs?.vitLevel || 1),
-        featDescription: getFeatDescription('VIT', attrs?.vitLevel || 1),
+        level: attrs.vitLevel,
+        currentXp: attrs.vitXp,
+        requiredXp: getRequiredXP(attrs.vitLevel),
+        featDescription: getFeatDescription('VIT', attrs.vitLevel),
       },
       AGI: {
-        level: attrs?.agiLevel || 1,
-        currentXp: attrs?.agiXp || 0,
-        requiredXp: getRequiredXP(attrs?.agiLevel || 1),
-        featDescription: getFeatDescription('AGI', attrs?.agiLevel || 1),
+        level: attrs.agiLevel,
+        currentXp: attrs.agiXp,
+        requiredXp: getRequiredXP(attrs.agiLevel),
+        featDescription: getFeatDescription('AGI', attrs.agiLevel),
       },
       CHA: {
-        level: attrs?.chaLevel || 1,
-        currentXp: attrs?.chaXp || 0,
-        requiredXp: getRequiredXP(attrs?.chaLevel || 1),
-        featDescription: getFeatDescription('CHA', attrs?.chaLevel || 1),
+        level: attrs.chaLevel,
+        currentXp: attrs.chaXp,
+        requiredXp: getRequiredXP(attrs.chaLevel),
+        featDescription: getFeatDescription('CHA', attrs.chaLevel),
       },
     };
 
@@ -81,13 +82,16 @@ export async function GET(request: Request) {
         requiredXp: reqXp,
         gold: character.gold,
         streakCount: character.streakCount,
-        lastActiveDate: character.lastActiveDate.toISOString(),
+        lastActiveDate: character.lastActiveDate,
         sacrificesThisMonth: character.sacrificesThisMonth,
         attributes: formattedAttributes,
       },
     });
   } catch (error) {
     console.error('Error fetching character:', error);
-    return NextResponse.json({ success: false, error: 'Failed to fetch character profile' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch character profile' },
+      { status: 500 }
+    );
   }
 }

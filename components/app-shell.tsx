@@ -14,10 +14,14 @@ import {
   Sparkles,
   Shield,
   Moon,
+  LogOut,
+  LogIn,
+  User,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AudioController } from "@/components/audio-controller";
 import { useGame, GameViewTab } from "@/lib/game-context";
+import { AuthModal } from "@/components/auth-modal";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -76,7 +80,21 @@ const navItems: {
 ];
 
 export function AppShell({ children }: AppShellProps) {
-  const { character, activeTab, setActiveTab, solitude, loading } = useGame();
+  const {
+    currentUser,
+    character,
+    activeTab,
+    setActiveTab,
+    solitude,
+    loading,
+    isAuthModalOpen,
+    setIsAuthModalOpen,
+    handleLogin,
+    handleRegister,
+    handleLogout,
+    handleQuickDemoLogin,
+  } = useGame();
+
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleSelectTab = (tab: GameViewTab) => {
@@ -149,20 +167,43 @@ export function AppShell({ children }: AppShellProps) {
           })}
         </nav>
 
-        {/* Hunter Quick Rank Footer */}
+        {/* Hunter Quick Account Card Footer */}
         <div className="p-4 border-t-2 border-slate-100">
-          <div className="rounded-2xl border-2 border-slate-100 bg-slate-50 p-3 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 text-purple-600 font-black text-sm">
-              L{character.level}
+          <div className="rounded-2xl border-2 border-slate-100 bg-slate-50 p-3">
+            <div className="flex items-center gap-2.5 mb-2">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-100 text-purple-700 font-black text-xs shrink-0">
+                {character.name.charAt(0)}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-black text-slate-900 truncate">
+                  {character.name}
+                </p>
+                <p className="text-[10px] font-bold text-slate-600 truncate">
+                  {currentUser?.email || "Guest Hunter"}
+                </p>
+              </div>
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-xs font-black text-slate-800 truncate">
-                {character.name}
-              </p>
-              <p className="text-[11px] font-bold text-slate-600 truncate">
-                {character.title}
-              </p>
-            </div>
+
+            {/* Log in / Log out button */}
+            {currentUser ? (
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-[11px] font-bold text-slate-600 transition-all"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                Sign Out
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setIsAuthModalOpen(true)}
+                className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-xl btn-duo-green text-[11px] font-black uppercase tracking-wider"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                Sign In / Register
+              </button>
+            )}
           </div>
         </div>
       </aside>
@@ -201,7 +242,7 @@ export function AppShell({ children }: AppShellProps) {
             {loading && (
               <span className="flex items-center gap-1.5 text-xs text-cyan-600 font-bold ml-2">
                 <Sparkles className="w-3.5 h-3.5 animate-spin" />
-                Cloud sync...
+                Syncing...
               </span>
             )}
           </div>
@@ -252,6 +293,28 @@ export function AppShell({ children }: AppShellProps) {
                 <Moon className="w-3.5 h-3.5 text-purple-600 fill-purple-200" />
                 <span>{solitude.multiplier}x XP</span>
               </div>
+            )}
+
+            {/* Auth Account Button */}
+            {currentUser ? (
+              <button
+                type="button"
+                onClick={handleLogout}
+                title={`Logged in as ${currentUser.email}. Click to sign out.`}
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border-2 border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-black shadow-sm active:translate-y-0.5"
+              >
+                <User className="w-3.5 h-3.5 text-slate-500" />
+                <span>Sign Out</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setIsAuthModalOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl btn-duo-green text-xs font-black uppercase tracking-wider shadow-sm"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>Sign In</span>
+              </button>
             )}
 
             {/* SFX Audio Controller */}
@@ -334,14 +397,51 @@ export function AppShell({ children }: AppShellProps) {
               </nav>
 
               <div className="p-4 border-t-2 border-slate-100">
-                <p className="text-xs font-bold text-slate-600">
-                  Logged in as {character.name} (Lvl {character.level})
+                <p className="text-xs font-black text-slate-800">
+                  {character.name} (Lvl {character.level})
                 </p>
+                <p className="text-[10px] text-slate-500 font-medium mb-3">
+                  {currentUser?.email || "Guest"}
+                </p>
+                {currentUser ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleLogout();
+                      setMobileOpen(false);
+                    }}
+                    className="w-full py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-600"
+                  >
+                    Sign Out
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsAuthModalOpen(true);
+                      setMobileOpen(false);
+                    }}
+                    className="w-full py-2 rounded-xl btn-duo-green text-xs font-black uppercase"
+                  >
+                    Sign In / Register
+                  </button>
+                )}
               </div>
             </motion.aside>
           </>
         )}
       </AnimatePresence>
+
+      {/* ============================================================
+          GLOBAL AUTH MODAL
+      ============================================================ */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLogin={handleLogin}
+        onRegister={handleRegister}
+        onDemoLogin={handleQuickDemoLogin}
+      />
     </div>
   );
 }

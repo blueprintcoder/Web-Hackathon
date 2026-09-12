@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { serverDb } from '@/lib/server-db';
 import { validateSoulSacrifice } from '@/lib/rpg-engine';
 
 export const dynamic = 'force-dynamic';
@@ -7,48 +7,52 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { characterId } = body;
+    const { characterId, userId } = body;
 
-    let targetCharacterId = characterId;
-    if (!targetCharacterId) {
-      const char = await prisma.character.findFirst();
-      targetCharacterId = char?.id;
+    let character = characterId ? serverDb.getCharacterById(characterId) : null;
+    if (!character && userId) {
+      character = serverDb.getCharacterByUserId(userId);
     }
-
-    if (!targetCharacterId) {
-      return NextResponse.json({ success: false, error: 'Character not found' }, { status: 404 });
+    if (!character) {
+      character = serverDb.getCharacterByUserId('user-demo-judge');
     }
-
-    const character = await prisma.character.findUnique({
-      where: { id: targetCharacterId },
-    });
 
     if (!character) {
-      return NextResponse.json({ success: false, error: 'Character not found' }, { status: 404 });
+      return NextResponse.json(
+        { success: false, error: 'Character not found' },
+        { status: 404 }
+      );
     }
 
-    const validation = validateSoulSacrifice(character.level, character.sacrificesThisMonth);
+    const validation = validateSoulSacrifice(
+      character.level,
+      character.sacrificesThisMonth
+    );
+
     if (!validation.valid) {
-      return NextResponse.json({ success: false, error: validation.reason }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: validation.reason },
+        { status: 400 }
+      );
     }
 
-    // Execute Soul Sacrifice: Demote 1 level, restore/increment streak
-    const updated = await prisma.character.update({
-      where: { id: targetCharacterId },
-      data: {
-        level: character.level - 1,
-        streakCount: character.streakCount + 1,
-        sacrificesThisMonth: character.sacrificesThisMonth + 1,
-      },
+    // Demote 1 level and restore streak intact
+    const updated = serverDb.updateCharacter(character.id, {
+      level: character.level - 1,
+      streakCount: character.streakCount + 1,
+      sacrificesThisMonth: character.sacrificesThisMonth + 1,
     });
 
     return NextResponse.json({
       success: true,
-      message: 'Soul Sacrifice executed: 1 Level sacrificed to preserve your streak intact.',
+      message: 'Soul Sacrifice executed: 1 Level sacrificed to preserve streak intact.',
       character: updated,
     });
   } catch (error) {
     console.error('Soul sacrifice error:', error);
-    return NextResponse.json({ success: false, error: 'Failed to execute sacrifice' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: 'Failed to execute sacrifice' },
+      { status: 500 }
+    );
   }
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { serverDb } from '@/lib/server-db';
 import { getRequiredXP, calculateBossDamage } from '@/lib/rpg-engine';
 
 export const dynamic = 'force-dynamic';
@@ -13,19 +13,21 @@ export async function PATCH(
     const { id } = await params;
     const body = await request.json();
 
-    const quest = await prisma.quest.findUnique({
-      where: { id },
-      include: { user: { include: { character: { include: { attributes: true } } } } },
-    });
-
+    const quest = serverDb.getQuestById(id);
     if (!quest) {
-      return NextResponse.json({ success: false, error: 'Quest not found' }, { status: 404 });
+      return NextResponse.json(
+        { success: false, error: 'Quest not found' },
+        { status: 404 }
+      );
     }
 
     if (body.status === 'COMPLETED' && quest.status !== 'COMPLETED') {
-      const character = quest.user.character;
+      const character = serverDb.getCharacterByUserId(quest.userId);
       if (!character) {
-        return NextResponse.json({ success: false, error: 'Character not found' }, { status: 404 });
+        return NextResponse.json(
+          { success: false, error: 'Character not found' },
+          { status: 404 }
+        );
       }
 
       const xpGained = quest.xpReward;
@@ -34,36 +36,35 @@ export async function PATCH(
       let newLevel = character.level;
       let levelUp = false;
 
-      // Check level up
+      // Check level up with exact RPG engine XP curve
       let reqXp = getRequiredXP(newLevel);
-      if (newXp >= reqXp) {
+      while (newXp >= reqXp) {
         newLevel += 1;
         newXp = newXp - reqXp;
+        reqXp = getRequiredXP(newLevel);
         levelUp = true;
       }
 
       // Calculate Boss damage
-      const strLevel = character.attributes?.strLevel || 1;
+      const attrs = serverDb.getAttributesByCharacterId(character.id);
+      const strLevel = attrs?.strLevel || 1;
       const damage = calculateBossDamage(xpGained, strLevel);
 
-      // Perform atomic database transaction
-      const [updatedQuest, updatedCharacter] = await prisma.$transaction([
-        prisma.quest.update({
-          where: { id },
-          data: {
-            status: 'COMPLETED',
-            completedAt: new Date(),
-          },
-        }),
-        prisma.character.update({
-          where: { id: character.id },
-          data: {
-            currentXp: newXp,
-            level: newLevel,
-            gold: character.gold + goldGained,
-          },
-        }),
-      ]);
+      // Damage boss in database
+      serverDb.damageBoss(damage);
+
+      // Update character
+      const updatedCharacter = serverDb.updateCharacter(character.id, {
+        currentXp: newXp,
+        level: newLevel,
+        gold: character.gold + goldGained,
+      });
+
+      // Update quest
+      const updatedQuest = serverDb.updateQuest(id, {
+        status: 'COMPLETED',
+        completedAt: new Date().toISOString(),
+      });
 
       return NextResponse.json({
         success: true,
@@ -74,29 +75,13 @@ export async function PATCH(
       });
     }
 
-    const updated = await prisma.quest.update({
-      where: { id },
-      data: body,
-    });
-
+    const updated = serverDb.updateQuest(id, body);
     return NextResponse.json({ success: true, quest: updated });
   } catch (error) {
     console.error('Error updating quest:', error);
-    return NextResponse.json({ success: false, error: 'Failed to update quest' }, { status: 500 });
-  }
-}
-
-// DELETE quest
-export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { id } = await params;
-    await prisma.quest.delete({ where: { id } });
-    return NextResponse.json({ success: true, message: 'Quest deleted' });
-  } catch (error) {
-    console.error('Error deleting quest:', error);
-    return NextResponse.json({ success: false, error: 'Failed to delete quest' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: 'Failed to update quest' },
+      { status: 500 }
+    );
   }
 }

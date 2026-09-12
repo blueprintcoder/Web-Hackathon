@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
+import { serverDb } from '@/lib/server-db';
 
 export const dynamic = 'force-dynamic';
 
@@ -7,18 +7,10 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
+    const userId = searchParams.get('userId') || 'user-demo-judge';
 
-    const items = await prisma.shopItem.findMany({
-      orderBy: { cost: 'asc' },
-    });
-
-    const inventory = userId
-      ? await prisma.inventory.findMany({
-          where: { userId },
-          include: { item: true },
-        })
-      : [];
+    const items = serverDb.getShopItems();
+    const inventory = serverDb.getInventoryByUserId(userId);
 
     return NextResponse.json({
       success: true,
@@ -27,7 +19,10 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error fetching shop items:', error);
-    return NextResponse.json({ success: false, error: 'Failed to fetch shop items' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch shop items' },
+      { status: 500 }
+    );
   }
 }
 
@@ -35,59 +30,58 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { itemId, characterId } = body;
+    const { itemId, characterId, userId } = body;
 
-    let targetCharId = characterId;
-    if (!targetCharId) {
-      const char = await prisma.character.findFirst();
-      targetCharId = char?.id;
+    if (!itemId) {
+      return NextResponse.json(
+        { success: false, error: 'Item ID is required.' },
+        { status: 400 }
+      );
     }
 
-    if (!targetCharId) {
-      return NextResponse.json({ success: false, error: 'Character not found' }, { status: 404 });
+    // Determine target user and character
+    let targetChar = characterId ? serverDb.getCharacterById(characterId) : null;
+    if (!targetChar && userId) {
+      targetChar = serverDb.getCharacterByUserId(userId);
+    }
+    if (!targetChar) {
+      // Fall back to first character or demo character
+      const db = serverDb.getBossRaid(); // trigger db init
+      const firstChar = serverDb.getCharacterByUserId('user-demo-judge');
+      targetChar = firstChar;
     }
 
-    const item = await prisma.shopItem.findUnique({
-      where: { id: itemId },
-    });
-
-    if (!item) {
-      return NextResponse.json({ success: false, error: 'Item not found' }, { status: 404 });
+    if (!targetChar) {
+      return NextResponse.json(
+        { success: false, error: 'Character not found' },
+        { status: 404 }
+      );
     }
 
-    const character = await prisma.character.findUnique({
-      where: { id: targetCharId },
-    });
+    const result = serverDb.purchaseItem(
+      targetChar.userId,
+      targetChar.id,
+      itemId
+    );
 
-    if (!character || character.gold < item.cost) {
-      return NextResponse.json({ success: false, error: 'Insufficient gold balance' }, { status: 400 });
+    if (!result.success) {
+      return NextResponse.json(
+        { success: false, error: result.error },
+        { status: 400 }
+      );
     }
-
-    // Atomic transaction: deduct gold and insert inventory
-    const [updatedChar, inventoryEntry] = await prisma.$transaction([
-      prisma.character.update({
-        where: { id: targetCharId },
-        data: {
-          gold: character.gold - item.cost,
-        },
-      }),
-      prisma.inventory.create({
-        data: {
-          userId: character.userId,
-          itemId: item.id,
-          equipped: true,
-        },
-      }),
-    ]);
 
     return NextResponse.json({
       success: true,
-      message: `Successfully acquired ${item.name}!`,
-      character: updatedChar,
-      inventory: inventoryEntry,
+      message: `Successfully acquired ${result.inventory?.item?.name}!`,
+      character: result.character,
+      inventory: result.inventory,
     });
   } catch (error) {
     console.error('Shop purchase error:', error);
-    return NextResponse.json({ success: false, error: 'Failed to process purchase' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: 'Failed to process purchase' },
+      { status: 500 }
+    );
   }
 }
