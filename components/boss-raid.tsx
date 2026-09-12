@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 import type { BossRaid } from "@/types/game";
+import { DemonCreature } from "./demon-creature";
 
 interface BossRaidProps {
   boss: BossRaid;
@@ -317,6 +318,15 @@ export function BossRaidCard({ boss }: BossRaidProps) {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* The Living Animated Demon Boss Creature */}
+        <DemonCreature
+          isDefeated={isDefeated}
+          showDamage={showDamage}
+          damageTaken={damageTaken}
+          hpPercent={hpPercent}
+          onAttack={onAttackBoss}
+        />
 
         {/* Boss status */}
         <div className="relative flex items-end justify-between gap-3">

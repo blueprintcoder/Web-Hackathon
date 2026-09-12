@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import type { Character } from "@/types/game";
+import { ShadowFamiliar } from "./shadow-familiar";
 
 interface CharacterCardProps {
   character: Character;
@@ -125,6 +126,11 @@ export function CharacterCard({
             <p className="mt-0.5 text-sm text-slate-400">
               {character.title}
             </p>
+          </div>
+
+          {/* Shadow Drake Familiar Companion */}
+          <div className="hidden md:block pl-2">
+            <ShadowFamiliar level={character.level} />
           </div>
         </div>
 
