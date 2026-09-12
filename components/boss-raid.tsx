@@ -24,7 +24,7 @@ interface BossRaidProps {
   onAttackBoss?: () => void;
 }
 
-export function BossRaidCard({ boss }: BossRaidProps) {
+export function BossRaidCard({ boss, onAttackBoss }: BossRaidProps) {
   const [showDamage, setShowDamage] = useState(false);
   const [previousHp, setPreviousHp] = useState(boss.currentHp);
   const [damageTaken, setDamageTaken] = useState(0);
