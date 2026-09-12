@@ -5,6 +5,12 @@
       "email": "demo@aetheria.rpg",
       "passwordHash": "0ead2060b65992dca4769af601a1b3a35ef38cfad2c2c465bb160ea764157c5d",
       "createdAt": "2026-09-12T23:32:28.353Z"
+    },
+    {
+      "id": "user-1789256616685-vdd9b",
+      "email": "hunter1@test.com",
+      "passwordHash": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f",
+      "createdAt": "2026-09-12T23:43:36.685Z"
     }
   ],
   "characters": [
@@ -15,9 +21,21 @@
       "title": "Shadow Monarch Apprentice",
       "level": 3,
       "currentXp": 185,
-      "gold": 60,
+      "gold": 140,
       "streakCount": 5,
       "lastActiveDate": "2026-09-12T23:32:28.353Z",
+      "sacrificesThisMonth": 0
+    },
+    {
+      "id": "char-1789256616685-p8b90",
+      "userId": "user-1789256616685-vdd9b",
+      "name": "Solo King",
+      "title": "Novice Awakened",
+      "level": 1,
+      "currentXp": 0,
+      "gold": 50,
+      "streakCount": 1,
+      "lastActiveDate": "2026-09-12T23:43:36.685Z",
       "sacrificesThisMonth": 0
     }
   ],
@@ -35,6 +53,20 @@
       "agiXp": 60,
       "chaLevel": 2,
       "chaXp": 20
+    },
+    {
+      "id": "attr-1789256616685-e9m1k",
+      "characterId": "char-1789256616685-p8b90",
+      "strLevel": 1,
+      "strXp": 0,
+      "intLevel": 1,
+      "intXp": 0,
+      "vitLevel": 1,
+      "vitXp": 0,
+      "agiLevel": 1,
+      "agiXp": 0,
+      "chaLevel": 1,
+      "chaXp": 0
     }
   ],
   "quests": [
@@ -103,6 +135,45 @@
       "status": "PENDING",
       "isDaily": false,
       "createdAt": "2026-09-12T23:32:28.353Z"
+    },
+    {
+      "id": "q-1789256616685-1",
+      "userId": "user-1789256616685-vdd9b",
+      "title": "Morning Hydration Rite",
+      "description": "Drink 500ml pure water upon waking to cleanse bodily toxins.",
+      "category": "VIT",
+      "rank": "E",
+      "xpReward": 15,
+      "goldReward": 5,
+      "status": "PENDING",
+      "isDaily": true,
+      "createdAt": "2026-09-12T23:43:36.685Z"
+    },
+    {
+      "id": "q-1789256616686-2",
+      "userId": "user-1789256616685-vdd9b",
+      "title": "First Deep Work Session",
+      "description": "Complete 30 minutes of uninterrupted productive focus.",
+      "category": "INT",
+      "rank": "D",
+      "xpReward": 25,
+      "goldReward": 10,
+      "status": "PENDING",
+      "isDaily": true,
+      "createdAt": "2026-09-12T23:43:36.686Z"
+    },
+    {
+      "id": "q-1789256616686-3",
+      "userId": "user-1789256616685-vdd9b",
+      "title": "Hunter Physical Warmup",
+      "description": "30 pushups or 15-minute brisk walk to activate physical vitality.",
+      "category": "STR",
+      "rank": "D",
+      "xpReward": 25,
+      "goldReward": 10,
+      "status": "PENDING",
+      "isDaily": true,
+      "createdAt": "2026-09-12T23:43:36.686Z"
     }
   ],
   "shopItems": [
