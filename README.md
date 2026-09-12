@@ -51,7 +51,7 @@ Instead of a generic Bootstrap dashboard, **Aetheria** implements the **Solo Lev
 
 ### 1. Clone & Install Dependencies
 ```bash
-git clone <YOUR_REPO_URL>
+git clone https://github.com/blueprintcoder/Web-Hackathon.git
 cd "Web Hackathon"
 npm install
 ```
