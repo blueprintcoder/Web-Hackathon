@@ -3,6 +3,8 @@ import { prisma } from '@/lib/db';
 import { getRequiredXP, getFeatDescription } from '@/lib/rpg-engine';
 import { AttributeKey } from '@/types/game';
 
+export const dynamic = 'force-dynamic';
+
 // GET character profile & attributes
 export async function GET(request: Request) {
   try {

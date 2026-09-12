@@ -3,6 +3,8 @@ import { prisma } from '@/lib/db';
 import { getRankRewards } from '@/lib/rpg-engine';
 import { QuestRank } from '@/types/game';
 
+export const dynamic = 'force-dynamic';
+
 // GET all quests
 export async function GET(request: Request) {
   try {

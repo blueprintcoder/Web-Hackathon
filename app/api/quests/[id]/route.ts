@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getRequiredXP, calculateBossDamage } from '@/lib/rpg-engine';
 
+export const dynamic = 'force-dynamic';
+
 // PATCH to complete quest
 export async function PATCH(
   request: Request,
