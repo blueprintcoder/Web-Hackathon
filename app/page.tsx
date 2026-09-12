@@ -31,6 +31,7 @@ import { QuestBoard } from '@/components/quest-board';
 import { BlackMarket } from '@/components/black-market';
 import { Inventory } from '@/components/inventory';
 import { LevelUpModal } from '@/components/level-up-modal';
+import { Store, Backpack, Moon, Sparkles, Flame } from 'lucide-react';
 
 export default function HomePage() {
   // ============================================================
@@ -42,6 +43,7 @@ export default function HomePage() {
   const [boss, setBoss] = useState<BossRaid>(mockBoss);
   const [shopItems, setShopItems] = useState<ShopItem[]>(mockShopItems);
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
+  const [activeHubTab, setActiveHubTab] = useState<'MARKET' | 'INVENTORY'>('MARKET');
 
   const [loading, setLoading] = useState(true);
 
@@ -697,110 +699,136 @@ export default function HomePage() {
 
   return (
     <div className="space-y-6">
-      {loading && (
-        <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-2 text-xs text-white/50">
-          Synchronizing Hunter data...
+      {/* ======================================================
+          TOP STATUS & SOLITUDE BANNER
+      ====================================================== */}
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-800 bg-[#0d121f]/90 p-3.5 shadow-xl backdrop-blur-xl">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-600/20 text-violet-400 border border-violet-500/30">
+            <Moon className="h-5 w-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-black tracking-wide text-white uppercase">
+                {solitude.label}
+              </span>
+              <span className="rounded-full bg-violet-500/20 px-2 py-0.5 text-[10px] font-mono font-bold text-violet-300 border border-violet-500/30">
+                {solitude.multiplier}x Multiplier
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400">
+              {solitude.isActive
+                ? "Off-peak hours active! Earn +50% bonus XP on all completed quests."
+                : "Standard daylight grinding. Solitude focus activates between 11 PM and 6 AM."}
+            </p>
+          </div>
         </div>
-      )}
+
+        {loading && (
+          <div className="flex items-center gap-2 rounded-xl bg-cyan-950/40 border border-cyan-500/30 px-3 py-1 text-xs text-cyan-300 font-mono">
+            <Sparkles className="w-3.5 h-3.5 animate-spin" />
+            Syncing cloud database...
+          </div>
+        )}
+      </div>
 
       {/* ======================================================
-          1. CHARACTER STATUS
+          MAIN 2-COLUMN RESPONSIVE GAME DASHBOARD
       ====================================================== */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* LEFT COLUMN: PRIMARY FOCUS (QUESTS & MARKET HUB) */}
+        <div className="lg:col-span-7 xl:col-span-8 space-y-6">
+          {/* Quest Board */}
+          <section id="quests" className="scroll-mt-24">
+            <QuestBoard
+              quests={quests}
+              onCompleteQuest={handleCompleteQuest}
+              onCreateQuest={handleCreateQuest}
+            />
+          </section>
 
-      <CharacterCard
-        character={character}
-        onSoulSacrifice={
-          handleSoulSacrifice
-        }
-      />
+          {/* Duolingo-style Tabbed Hub for Black Market & Inventory */}
+          <div className="rounded-3xl border-2 border-slate-800 bg-[#0c101d] p-2 sm:p-4 shadow-2xl">
+            {/* 3D Tactile Tab Switcher */}
+            <div className="flex items-center gap-2.5 p-1 mb-4 bg-slate-950/80 rounded-2xl border border-slate-800/80">
+              <button
+                type="button"
+                onClick={() => setActiveHubTab('MARKET')}
+                className={`flex-1 py-3 px-4 rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${
+                  activeHubTab === 'MARKET'
+                    ? 'btn-3d-indigo text-white shadow-lg'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Store className="w-4 h-4 text-amber-400" />
+                Guild Black Market
+              </button>
 
-      {/* ======================================================
-          2. REAL-WORLD FEAT TRANSLATION
-      ====================================================== */}
+              <button
+                type="button"
+                onClick={() => setActiveHubTab('INVENTORY')}
+                className={`flex-1 py-3 px-4 rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${
+                  activeHubTab === 'INVENTORY'
+                    ? 'btn-3d-indigo text-white shadow-lg'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Backpack className="w-4 h-4 text-cyan-400" />
+                Hunter Vault ({inventory.length})
+              </button>
+            </div>
 
-      <FeatTranslationBar
-        attributes={
-          character.attributes
-        }
-      />
-
-      {/* ======================================================
-          3. WEEKLY BOSS RAID
-      ====================================================== */}
-
-      <section
-        id="weekly-boss"
-        className="scroll-mt-24"
-      >
-        <div id="boss">
-          <BossRaidCard boss={boss} />
+            {/* Tabbed Content */}
+            {activeHubTab === 'MARKET' ? (
+              <section id="black-market" className="scroll-mt-24">
+                <div id="market">
+                  <BlackMarket
+                    items={shopItems}
+                    userGold={character.gold}
+                    onPurchaseItem={handlePurchaseItem}
+                  />
+                </div>
+              </section>
+            ) : (
+              <section id="inventory" className="scroll-mt-24">
+                <Inventory
+                  items={inventory}
+                  onToggleEquip={handleToggleEquip}
+                />
+              </section>
+            )}
+          </div>
         </div>
-      </section>
 
-      {/* ======================================================
-          4. QUEST BOARD
-      ====================================================== */}
+        {/* RIGHT COLUMN: STICKY HUD (HUNTER STATUS, LIVING BOSS DEMON & FEATS) */}
+        <div className="lg:col-span-5 xl:col-span-4 space-y-6 lg:sticky lg:top-20">
+          {/* Character Card with Kage Familiar */}
+          <section id="overview" className="scroll-mt-24">
+            <CharacterCard
+              character={character}
+              onSoulSacrifice={handleSoulSacrifice}
+            />
+          </section>
 
-      <section
-        id="quests"
-        className="scroll-mt-24"
-      >
-        <QuestBoard
-          quests={quests}
-          onCompleteQuest={
-            handleCompleteQuest
-          }
-          onCreateQuest={
-            handleCreateQuest
-          }
-        />
-      </section>
+          {/* Weekly Boss Raid with Living Animated Demon */}
+          <section id="weekly-boss" className="scroll-mt-24">
+            <div id="boss">
+              <BossRaidCard boss={boss} />
+            </div>
+          </section>
 
-      {/* ======================================================
-          5. INVENTORY
-      ====================================================== */}
-
-      <section
-        id="inventory"
-        className="scroll-mt-24"
-      >
-        <Inventory
-          items={inventory}
-          onToggleEquip={
-            handleToggleEquip
-          }
-        />
-      </section>
-
-      {/* ======================================================
-          6. BLACK MARKET
-      ====================================================== */}
-
-      <section
-        id="black-market"
-        className="scroll-mt-24"
-      >
-        <div id="market">
-          <BlackMarket
-            items={shopItems}
-            userGold={character.gold}
-            onPurchaseItem={
-              handlePurchaseItem
-            }
-          />
+          {/* Real-World Feats Translation */}
+          <section id="honors" className="scroll-mt-24">
+            <FeatTranslationBar attributes={character.attributes} />
+          </section>
         </div>
-      </section>
+      </div>
 
-      {/* ======================================================
-          7. LEVEL UP MODAL
-      ====================================================== */}
-
+      {/* Level Up Modal */}
       <LevelUpModal
         isOpen={isLevelUpOpen}
         newLevel={newLevelAnnounced}
-        onClose={() =>
-          setIsLevelUpOpen(false)
-        }
+        onClose={() => setIsLevelUpOpen(false)}
       />
     </div>
   );

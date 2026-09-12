@@ -45,27 +45,8 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-
-  background:
-    radial-gradient(
-      circle at 50% -10%,
-      rgba(139, 92, 246, 0.13),
-      transparent 32%
-    ),
-    radial-gradient(
-      circle at 100% 30%,
-      rgba(34, 211, 238, 0.055),
-      transparent 28%
-    ),
-    linear-gradient(
-      180deg,
-      #070912 0%,
-      #080b14 48%,
-      #05070d 100%
-    );
-
+  background: #070912;
   color: #f8fafc;
-
   font-family:
     Inter,
     ui-sans-serif,
@@ -74,6 +55,7 @@ body {
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 button,
@@ -93,10 +75,9 @@ button {
 }
 
 /* Scrollbar */
-
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
@@ -104,7 +85,7 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #293047;
+  background: #252e42;
   border-radius: 999px;
 }
 
@@ -112,23 +93,122 @@ button {
   background: #3b4664;
 }
 
-/* Shared Aetheria surfaces */
+/* Duolingo-style 3D Tactile Buttons & Elements */
+.btn-3d-emerald {
+  background-color: #10b981;
+  border-bottom: 4px solid #047857;
+  transition: all 0.08s ease;
+}
+.btn-3d-emerald:hover {
+  background-color: #059669;
+}
+.btn-3d-emerald:active {
+  border-bottom-width: 0px;
+  transform: translateY(4px);
+}
 
+.btn-3d-indigo {
+  background-color: #6366f1;
+  border-bottom: 4px solid #4338ca;
+  transition: all 0.08s ease;
+}
+.btn-3d-indigo:hover {
+  background-color: #4f46e5;
+}
+.btn-3d-indigo:active {
+  border-bottom-width: 0px;
+  transform: translateY(4px);
+}
+
+.btn-3d-violet {
+  background-color: #8b5cf6;
+  border-bottom: 4px solid #6d28d9;
+  transition: all 0.08s ease;
+}
+.btn-3d-violet:hover {
+  background-color: #7c3aed;
+}
+.btn-3d-violet:active {
+  border-bottom-width: 0px;
+  transform: translateY(4px);
+}
+
+.btn-3d-amber {
+  background-color: #f59e0b;
+  border-bottom: 4px solid #b45309;
+  transition: all 0.08s ease;
+}
+.btn-3d-amber:hover {
+  background-color: #d97706;
+}
+.btn-3d-amber:active {
+  border-bottom-width: 0px;
+  transform: translateY(4px);
+}
+
+.btn-3d-rose {
+  background-color: #f43f5e;
+  border-bottom: 4px solid #be123c;
+  transition: all 0.08s ease;
+}
+.btn-3d-rose:hover {
+  background-color: #e11d48;
+}
+.btn-3d-rose:active {
+  border-bottom-width: 0px;
+  transform: translateY(4px);
+}
+
+.btn-3d-slate {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-bottom: 4px solid #0f172a;
+  transition: all 0.08s ease;
+}
+.btn-3d-slate:hover {
+  background-color: #334155;
+}
+.btn-3d-slate:active {
+  border-bottom-width: 1px;
+  transform: translateY(3px);
+}
+
+/* Duolingo-style Chunky 3D Game Cards */
+.card-duo {
+  background: #111827;
+  border: 2px solid #1f2937;
+  border-bottom: 5px solid #0f172a;
+  border-radius: 1.5rem;
+  transition: all 0.15s ease;
+}
+.card-duo:hover {
+  border-color: #374151;
+}
+
+/* Juicy Progress Bar with glossy top highlight */
+.bar-juicy {
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+}
+.bar-juicy::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 4px;
+  right: 4px;
+  height: 38%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-radius: 9999px;
+  pointer-events-none;
+}
+
+/* Shared Aetheria surfaces */
 @layer utilities {
   .glass-panel {
-    background:
-      linear-gradient(
-        135deg,
-        rgba(17, 24, 39, 0.82),
-        rgba(9, 12, 22, 0.72)
-      );
-
-    border: 1px solid rgba(148, 163, 184, 0.11);
-
-    box-shadow:
-      0 18px 60px rgba(0, 0, 0, 0.28),
-      inset 0 1px 0 rgba(255, 255, 255, 0.035);
-
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.88), rgba(9, 12, 22, 0.82));
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(18px);
   }
 
@@ -137,95 +217,32 @@ button {
   }
 
   .premium-shadow {
-    box-shadow:
-      0 24px 70px rgba(0, 0, 0, 0.38),
-      0 0 40px rgba(124, 58, 237, 0.06);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38), 0 0 40px rgba(124, 58, 237, 0.06);
   }
 }
 
 /* Controlled glows */
-
 .glow-gold {
-  box-shadow: 0 0 24px rgba(245, 196, 81, 0.2);
+  box-shadow: 0 0 24px rgba(245, 196, 81, 0.22);
 }
 
 .glow-cyan {
-  box-shadow: 0 0 24px rgba(34, 211, 238, 0.2);
+  box-shadow: 0 0 24px rgba(34, 211, 238, 0.22);
 }
 
 .glow-purple {
-  box-shadow: 0 0 28px rgba(139, 92, 246, 0.22);
+  box-shadow: 0 0 28px rgba(139, 92, 246, 0.24);
 }
 
 .glow-rose {
-  box-shadow: 0 0 28px rgba(244, 63, 94, 0.18);
+  box-shadow: 0 0 28px rgba(244, 63, 94, 0.2);
 }
 
 /* Subtle RPG grid */
-
 .aether-grid {
   background-image:
-    linear-gradient(
-      rgba(148, 163, 184, 0.035) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(148, 163, 184, 0.035) 1px,
-      transparent 1px
-    );
-
+    linear-gradient(rgba(148, 163, 184, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.035) 1px, transparent 1px);
   background-size: 42px 42px;
-
-  mask-image:
-    linear-gradient(
-      to bottom,
-      black,
-      transparent 85%
-    );
-}
-
-/* Subtle system scan effect */
-
-.scanline {
-  position: relative;
-  overflow: hidden;
-}
-
-.scanline::after {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-
-  pointer-events: none;
-
-  background:
-    linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(255, 255, 255, 0.018) 50%,
-      transparent 100%
-    );
-
-  background-size: 100% 8px;
-
-  opacity: 0.35;
-}
-
-@keyframes aether-pulse {
-  0%,
-  100% {
-    opacity: 0.45;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 0.85;
-    transform: scale(1.08);
-  }
-}
-
-.aether-pulse {
-  animation: aether-pulse 3s ease-in-out infinite;
+  mask-image: linear-gradient(to bottom, black, transparent 85%);
 }
