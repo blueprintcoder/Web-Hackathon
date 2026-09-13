@@ -26,8 +26,8 @@
       "name": "Jin-Woo",
       "title": "Shadow Monarch Apprentice",
       "level": 3,
-      "currentXp": 185,
-      "gold": 140,
+      "currentXp": 275,
+      "gold": 180,
       "streakCount": 5,
       "lastActiveDate": "2026-09-12T23:32:28.353Z",
       "sacrificesThisMonth": 0
@@ -139,9 +139,10 @@
       "rank": "E",
       "xpReward": 15,
       "goldReward": 5,
-      "status": "PENDING",
+      "status": "COMPLETED",
       "isDaily": true,
-      "createdAt": "2026-09-12T23:32:28.353Z"
+      "createdAt": "2026-09-12T23:32:28.353Z",
+      "completedAt": "2026-09-13T00:08:12.294Z"
     },
     {
       "id": "quest-2",
@@ -152,9 +153,10 @@
       "rank": "B",
       "xpReward": 75,
       "goldReward": 35,
-      "status": "PENDING",
+      "status": "COMPLETED",
       "isDaily": false,
-      "createdAt": "2026-09-12T23:32:28.353Z"
+      "createdAt": "2026-09-12T23:32:28.353Z",
+      "completedAt": "2026-09-13T00:08:12.300Z"
     },
     {
       "id": "quest-3",
@@ -370,7 +372,7 @@
       "name": "Malakor the Sloth",
       "title": "Lord of Distraction & Procrastination",
       "maxHp": 3000,
-      "currentHp": 1673,
+      "currentHp": 1455,
       "deadline": "Sunday 23:59 UTC",
       "rewardGold": 250,
       "rewardTitle": "Demon Slayer of Aetheria",
