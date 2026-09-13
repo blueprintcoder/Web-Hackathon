@@ -85,7 +85,7 @@ export function Inventory({ items, onToggleEquip }: InventoryProps) {
         </div>
 
         {/* Quick Filter */}
-        <div className="flex items-center gap-2 bg-slate-200/70 p-1 rounded-2xl">
+        <div className="flex items-center gap-1.5 bg-slate-100/90 p-1 rounded-2xl border border-slate-200/50">
           {(
             [
               ["ALL", "All Items"],
@@ -101,8 +101,8 @@ export function Inventory({ items, onToggleEquip }: InventoryProps) {
                 onClick={() => setFilter(key)}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
                   isActive
-                    ? "bg-white text-slate-900 shadow-sm border border-slate-200/80"
-                    : "text-slate-600 hover:text-slate-900"
+                    ? "bg-white text-slate-900 shadow-xs border border-slate-200/60"
+                    : "text-slate-500 hover:text-slate-900"
                 }`}
               >
                 {label}

@@ -110,7 +110,7 @@ export function CharacterCard({
           {/* Quick Stats Pill Group */}
           <div className="flex items-center gap-2 self-stretch sm:self-auto">
             {/* Streak */}
-            <div className="flex-1 sm:flex-none flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-amber-50 border-2 border-amber-200">
+            <div className="flex-1 sm:flex-none flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-amber-50/80 border border-amber-200/70 shadow-xs">
               <Flame className="w-5 h-5 text-orange-500 fill-orange-500" />
               <div>
                 <span className="block text-[9px] font-black uppercase tracking-wider text-amber-700">
@@ -123,7 +123,7 @@ export function CharacterCard({
             </div>
 
             {/* Gold */}
-            <div className="flex-1 sm:flex-none flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-yellow-50 border-2 border-yellow-200">
+            <div className="flex-1 sm:flex-none flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-yellow-50/80 border border-yellow-200/70 shadow-xs">
               <Coins className="w-5 h-5 text-yellow-500 fill-yellow-500" />
               <div>
                 <span className="block text-[9px] font-black uppercase tracking-wider text-yellow-700">
@@ -138,7 +138,7 @@ export function CharacterCard({
         </div>
 
         {/* Global XP Progress Bar */}
-        <div className="mt-6 pt-5 border-t-2 border-slate-100 space-y-2">
+        <div className="mt-6 pt-5 border-t border-slate-100 space-y-2">
           <div className="flex justify-between items-center text-xs font-black">
             <span className="text-slate-700">Hunter Level {character.level} Progression</span>
             <span className="font-mono text-slate-600">

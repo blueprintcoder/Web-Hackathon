@@ -93,7 +93,7 @@ export function AuthModal({
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-2xl mb-4 border border-slate-200">
+        <div className="flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl mb-4 border border-slate-200/60">
           <button
             type="button"
             onClick={() => {
@@ -144,7 +144,7 @@ export function AuthModal({
                 value={hunterName}
                 onChange={(e) => setHunterName(e.target.value)}
                 placeholder="e.g. Jin-Woo or Sung"
-                className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 text-sm font-bold text-slate-800 focus:border-emerald-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm font-semibold text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-400/20 focus:outline-none transition-all"
               />
             </div>
           )}
@@ -159,7 +159,7 @@ export function AuthModal({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="hunter@aetheria.rpg"
-              className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 text-sm font-bold text-slate-800 focus:border-emerald-500 focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm font-semibold text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-400/20 focus:outline-none transition-all"
             />
           </div>
 
@@ -173,7 +173,7 @@ export function AuthModal({
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 text-sm font-bold text-slate-800 focus:border-emerald-500 focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm font-semibold text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-400/20 focus:outline-none transition-all"
             />
           </div>
 

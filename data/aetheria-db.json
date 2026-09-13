@@ -11,6 +11,12 @@
       "email": "hunter1@test.com",
       "passwordHash": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f",
       "createdAt": "2026-09-12T23:43:36.685Z"
+    },
+    {
+      "id": "user-1789256792263-d3fo2",
+      "email": "jeetbheriya@gmail.com",
+      "passwordHash": "e6ebfca0cc16cebf5ec16350ba28495d8efc6ba3f18e8d809305d73179068563",
+      "createdAt": "2026-09-12T23:46:32.263Z"
     }
   ],
   "characters": [
@@ -36,6 +42,18 @@
       "gold": 50,
       "streakCount": 1,
       "lastActiveDate": "2026-09-12T23:43:36.685Z",
+      "sacrificesThisMonth": 0
+    },
+    {
+      "id": "char-1789256792263-byudb",
+      "userId": "user-1789256792263-d3fo2",
+      "name": "Jeet Bheriya",
+      "title": "Novice Awakened",
+      "level": 3,
+      "currentXp": 53,
+      "gold": 55,
+      "streakCount": 1,
+      "lastActiveDate": "2026-09-12T23:46:32.263Z",
       "sacrificesThisMonth": 0
     }
   ],
@@ -67,9 +85,51 @@
       "agiXp": 0,
       "chaLevel": 1,
       "chaXp": 0
+    },
+    {
+      "id": "attr-1789256792263-k9tg4",
+      "characterId": "char-1789256792263-byudb",
+      "strLevel": 1,
+      "strXp": 0,
+      "intLevel": 1,
+      "intXp": 0,
+      "vitLevel": 1,
+      "vitXp": 0,
+      "agiLevel": 1,
+      "agiXp": 0,
+      "chaLevel": 1,
+      "chaXp": 0
     }
   ],
   "quests": [
+    {
+      "userId": "user-1789256792263-d3fo2",
+      "title": "2 hrs Coding (Leetcode)",
+      "description": "",
+      "category": "INT",
+      "rank": "S",
+      "xpReward": 250,
+      "goldReward": 120,
+      "isDaily": true,
+      "status": "COMPLETED",
+      "id": "quest-1789257107270-zf31",
+      "createdAt": "2026-09-12T23:51:47.270Z",
+      "completedAt": "2026-09-12T23:51:50.973Z"
+    },
+    {
+      "userId": "user-1789256792263-d3fo2",
+      "title": "1 hr Running",
+      "description": "",
+      "category": "INT",
+      "rank": "A",
+      "xpReward": 120,
+      "goldReward": 60,
+      "isDaily": false,
+      "status": "COMPLETED",
+      "id": "quest-1789256837035-e5yj",
+      "createdAt": "2026-09-12T23:47:17.035Z",
+      "completedAt": "2026-09-12T23:47:19.120Z"
+    },
     {
       "id": "quest-1",
       "userId": "user-demo-judge",
@@ -174,6 +234,48 @@
       "status": "PENDING",
       "isDaily": true,
       "createdAt": "2026-09-12T23:43:36.686Z"
+    },
+    {
+      "id": "q-1789256792263-1",
+      "userId": "user-1789256792263-d3fo2",
+      "title": "Morning Hydration Rite",
+      "description": "Drink 500ml pure water upon waking to cleanse bodily toxins.",
+      "category": "VIT",
+      "rank": "E",
+      "xpReward": 15,
+      "goldReward": 5,
+      "status": "COMPLETED",
+      "isDaily": true,
+      "createdAt": "2026-09-12T23:46:32.263Z",
+      "completedAt": "2026-09-12T23:46:53.773Z"
+    },
+    {
+      "id": "q-1789256792263-2",
+      "userId": "user-1789256792263-d3fo2",
+      "title": "First Deep Work Session",
+      "description": "Complete 30 minutes of uninterrupted productive focus.",
+      "category": "INT",
+      "rank": "D",
+      "xpReward": 25,
+      "goldReward": 10,
+      "status": "COMPLETED",
+      "isDaily": true,
+      "createdAt": "2026-09-12T23:46:32.263Z",
+      "completedAt": "2026-09-12T23:46:53.776Z"
+    },
+    {
+      "id": "q-1789256792263-3",
+      "userId": "user-1789256792263-d3fo2",
+      "title": "Hunter Physical Warmup",
+      "description": "30 pushups or 15-minute brisk walk to activate physical vitality.",
+      "category": "STR",
+      "rank": "D",
+      "xpReward": 25,
+      "goldReward": 10,
+      "status": "COMPLETED",
+      "isDaily": true,
+      "createdAt": "2026-09-12T23:46:32.263Z",
+      "completedAt": "2026-09-12T23:46:53.779Z"
     }
   ],
   "shopItems": [
@@ -234,6 +336,20 @@
   ],
   "inventory": [
     {
+      "id": "inv-1789257173767-0lbx",
+      "userId": "user-1789256792263-d3fo2",
+      "itemId": "item-1",
+      "equipped": true,
+      "acquiredAt": "2026-09-12T23:52:53.767Z"
+    },
+    {
+      "id": "inv-1789256877058-0ueq",
+      "userId": "user-1789256792263-d3fo2",
+      "itemId": "item-3",
+      "equipped": true,
+      "acquiredAt": "2026-09-12T23:47:57.058Z"
+    },
+    {
       "id": "inv-1",
       "userId": "user-demo-judge",
       "itemId": "item-1",
@@ -254,7 +370,7 @@
       "name": "Malakor the Sloth",
       "title": "Lord of Distraction & Procrastination",
       "maxHp": 3000,
-      "currentHp": 2180,
+      "currentHp": 1673,
       "deadline": "Sunday 23:59 UTC",
       "rewardGold": 250,
       "rewardTitle": "Demon Slayer of Aetheria",

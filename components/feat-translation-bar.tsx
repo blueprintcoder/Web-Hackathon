@@ -104,7 +104,7 @@ export function FeatTranslationBar({ attributes }: FeatTranslationBarProps) {
               className="card-duo-light p-4 bg-white flex items-start gap-3.5"
             >
               <div
-                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${config.bg} ${config.color} border-2 ${config.border}`}
+                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${config.bg} ${config.color} border ${config.border}`}
               >
                 <Icon className="h-5 w-5" />
               </div>
@@ -114,7 +114,7 @@ export function FeatTranslationBar({ attributes }: FeatTranslationBarProps) {
                   <span className="font-black text-xs text-slate-800">
                     {config.subtitle} ({key})
                   </span>
-                  <span className="font-mono font-black text-xs text-slate-900 bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">
+                  <span className="font-mono font-black text-xs text-slate-900 bg-slate-100/80 px-2 py-0.5 rounded-lg border border-slate-200/60">
                     Level {attr.level}
                   </span>
                 </div>

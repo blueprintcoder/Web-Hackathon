@@ -23,7 +23,7 @@ export function AudioController() {
     <button
       onClick={toggleAudio}
       title={muted ? "Unmute sound effects" : "Mute sound effects"}
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border-2 border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold transition-all shadow-sm active:translate-y-0.5"
+      className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-slate-200/60 bg-white hover:bg-slate-50 text-slate-600 text-xs font-black transition-all shadow-xs active:translate-y-0.5"
     >
       {muted ? (
         <>

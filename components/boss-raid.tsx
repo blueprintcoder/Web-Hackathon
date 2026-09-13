@@ -59,7 +59,7 @@ export function BossRaidCard({ boss, onAttackBoss }: BossRaidProps) {
   return (
     <div className="card-duo-light p-6 sm:p-8 bg-white relative overflow-hidden">
       {/* Top Raid Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-slate-100 pb-5">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
         <div className="flex items-center gap-3.5">
           <div
             className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
@@ -103,7 +103,7 @@ export function BossRaidCard({ boss, onAttackBoss }: BossRaidProps) {
         </div>
 
         {/* Reset Countdown */}
-        <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-slate-50 border-2 border-slate-200">
+        <div className="flex items-center gap-2 px-3 py-2 rounded-2xl bg-slate-50 border border-slate-200/80 shadow-xs">
           <Clock className="w-4 h-4 text-slate-600" />
           <div className="text-right">
             <span className="block text-[9px] font-black uppercase tracking-wider text-slate-600">
@@ -117,7 +117,7 @@ export function BossRaidCard({ boss, onAttackBoss }: BossRaidProps) {
       </div>
 
       {/* Center Arena: Animated Demon Creature */}
-      <div className="my-6 rounded-3xl bg-slate-50/80 border-2 border-slate-100 p-4 sm:p-6 flex flex-col items-center justify-center relative">
+      <div className="my-6 rounded-3xl bg-slate-50/80 border border-slate-200/60 p-4 sm:p-6 flex flex-col items-center justify-center relative">
         <DemonCreature
           isDefeated={isDefeated}
           showDamage={showDamage}

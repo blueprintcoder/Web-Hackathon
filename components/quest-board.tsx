@@ -210,7 +210,7 @@ export function QuestBoard({
       ============================================================ */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         {/* Tactile Tab Buttons */}
-        <div className="flex items-center gap-2 bg-slate-200/70 p-1 rounded-2xl">
+        <div className="flex items-center gap-1.5 bg-slate-100/90 p-1 rounded-2xl border border-slate-200/50">
           {(
             [
               ["ALL", `All Quests (${quests.length})`],
@@ -224,10 +224,10 @@ export function QuestBoard({
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
                   isActive
-                    ? "bg-white text-slate-900 shadow-sm border border-slate-200/80"
-                    : "text-slate-600 hover:text-slate-900"
+                    ? "bg-white text-slate-900 shadow-xs border border-slate-200/60"
+                    : "text-slate-500 hover:text-slate-900"
                 }`}
               >
                 {label}
@@ -443,7 +443,7 @@ export function QuestBoard({
                     value={newTitle}
                     onChange={(e) => setNewTitle(e.target.value)}
                     placeholder="e.g. 45-minute Deep Coding Session"
-                    className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 text-sm font-bold text-slate-800 focus:border-emerald-500 focus:outline-none"
+                    className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm font-semibold text-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-400/20 focus:outline-none transition-all"
                   />
                 </div>
 
@@ -457,7 +457,7 @@ export function QuestBoard({
                     value={newDesc}
                     onChange={(e) => setNewDesc(e.target.value)}
                     placeholder="What specific victory conditions must you achieve?"
-                    className="w-full rounded-xl border-2 border-slate-200 px-3 py-2 text-sm text-slate-800 font-medium focus:border-emerald-500 focus:outline-none"
+                    className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm text-slate-800 font-medium focus:border-emerald-500 focus:ring-2 focus:ring-emerald-400/20 focus:outline-none transition-all"
                   />
                 </div>
 
@@ -476,10 +476,10 @@ export function QuestBoard({
                             key={cat}
                             type="button"
                             onClick={() => setNewCategory(cat)}
-                            className={`p-2 rounded-xl border-2 flex flex-col items-center gap-1 font-black text-[11px] transition-all ${
+                            className={`p-2 rounded-xl border flex flex-col items-center gap-1 font-black text-[11px] transition-all ${
                               isSelected
-                                ? "border-emerald-500 bg-emerald-50 text-emerald-800 shadow-sm"
-                                : "border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100"
+                                ? "border-emerald-500 bg-emerald-50 text-emerald-800 shadow-xs"
+                                : "border-slate-200/80 bg-slate-50 text-slate-600 hover:bg-slate-100"
                             }`}
                           >
                             <Icon className="w-4 h-4" />
@@ -505,10 +505,10 @@ export function QuestBoard({
                             key={rk}
                             type="button"
                             onClick={() => setNewRank(rk)}
-                            className={`flex-1 py-1.5 rounded-xl border-2 font-black font-mono text-xs transition-all ${
+                            className={`flex-1 py-1.5 rounded-xl border font-black font-mono text-xs transition-all ${
                               isSelected
-                                ? "border-sky-500 bg-sky-50 text-sky-800"
-                                : "border-slate-200 text-slate-600 hover:bg-slate-100"
+                                ? "border-sky-500 bg-sky-50 text-sky-800 shadow-xs"
+                                : "border-slate-200/80 text-slate-600 hover:bg-slate-100"
                             }`}
                           >
                             {rk}
@@ -520,7 +520,7 @@ export function QuestBoard({
                 </div>
 
                 {/* Daily Rite Checkbox */}
-                <label className="flex items-center gap-3 p-3 rounded-xl border-2 border-slate-200 hover:bg-slate-50 cursor-pointer">
+                <label className="flex items-center gap-3 p-3 rounded-2xl border border-slate-200/80 hover:bg-slate-50 cursor-pointer transition-colors">
                   <input
                     type="checkbox"
                     checked={newIsDaily}

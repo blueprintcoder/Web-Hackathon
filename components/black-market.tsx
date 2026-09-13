@@ -82,7 +82,7 @@ export function BlackMarket({
         </div>
 
         {/* Current Gold Purse */}
-        <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-amber-50 border-2 border-amber-200 shadow-sm shrink-0">
+        <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-amber-50/80 border border-amber-200/70 shadow-xs shrink-0">
           <Coins className="w-5 h-5 text-amber-500 fill-amber-500" />
           <div>
             <span className="block text-[9px] font-black uppercase tracking-wider text-amber-700">
@@ -96,7 +96,7 @@ export function BlackMarket({
       </div>
 
       {/* Category Filter Pills */}
-      <div className="flex items-center gap-2 bg-slate-200/70 p-1 rounded-2xl w-fit">
+      <div className="flex items-center gap-1.5 bg-slate-100/90 p-1 rounded-2xl border border-slate-200/50 w-fit">
         {(
           [
             ["ALL", "All Goods"],
@@ -110,10 +110,10 @@ export function BlackMarket({
               key={key}
               type="button"
               onClick={() => setFilter(key)}
-              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
                 isActive
-                  ? "bg-white text-slate-900 shadow-sm border border-slate-200/80"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-white text-slate-900 shadow-xs border border-slate-200/60"
+                  : "text-slate-500 hover:text-slate-900"
               }`}
             >
               {label}
@@ -168,7 +168,7 @@ export function BlackMarket({
               </div>
 
               {/* Price & 3D Buy Button */}
-              <div className="mt-5 pt-3 border-t-2 border-slate-100 flex items-center justify-between gap-3">
+              <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-1 font-mono font-black text-sm text-amber-700">
                   <Coins className="w-4 h-4 text-amber-500 fill-amber-500" />
                   <span>{item.cost}</span>
